@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 0;
+  margin: 0;
+}
+body {
+  display: flex;
+  justify-content: center;
+  background: #ffffff;
+  height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  flex-direction: column;
+  width: 400px;
+  height: 112px;
+  border-radius: 6px;
+}
+#checkout {
+  width: 100vw;
+}
+.checkoutFormInput {
+  padding: 1rem;
+  background-color: #f1f1f1;
+  border-radius: 12px;
+  transition: background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+  display: block;
+  width: 292px;
+  margin-top: 0.25rem;
+  color: #30313d;
+  -moz-appearance: none;
+  appearance: none;
+  border-style: none;
+  box-shadow: none;
+  filter: none;
+  letter-spacing: inherit;
+  outline-offset: 0;
+  outline-width: 2px;
+  outline: none;
+  font-size: 1rem;
+  border: transparent 2px solid;
+}
+.checkoutFormInputError {
+  border: #DF1B41 2px solid;
+}
+.errorMessage {
+  color: #DF1B41;
+  font-size: 0.93rem;
+  margin-top: 4px;
+}
+.checkoutFormInput:focus {
+  box-shadow: 0 0 0 3px hsla(355, 76%, 36%, 25%) , 0 0 0 1px #a2162280;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #30313d;; /* Ensure text color is as expected */
+}
+.checkoutFormButton {
+  padding: 1rem;
+  background-color: #A31621;
+  border-radius: 12px;
+  transition: background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+
+  -moz-appearance: none;
+  appearance: none;
+  border-style: none;
+  box-shadow: none;
+  color: inherit;
+  filter: none;
+  letter-spacing: inherit;
+  outline-offset: 0;
+  outline-width: 2px;
+}
+.checkoutFormButton span {
+  color: white;
+}
+.checkoutFormContainer {
+  margin-bottom: 0.75rem;
+}
+.checkoutFormLabel {
+  font-size: 0.93rem;
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  color: #30313d;
+  font-weight: 400;
+  line-height: 1.15;
+}
