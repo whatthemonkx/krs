@@ -1,14 +1,15 @@
 import '../public/global.css';
 import { CartProvider } from '../context/CartContext';
-import {NextUIProvider} from '@nextui-org/react'
+import { ChakraProvider } from '@chakra-ui/react';
+import customTheme from "../theme";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <NextUIProvider>
+    <ChakraProvider theme={customTheme}>
       <CartProvider>
         <Component {...pageProps} />
       </CartProvider>
-    </NextUIProvider>
+    </ChakraProvider>
   );
 }
 
