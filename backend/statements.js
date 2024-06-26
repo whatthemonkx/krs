@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const userRoutes = require('./routes/users');
+const itemRoutes = require('./routes/items');
 const { createTables } = require('./database');
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.json());
 
 createTables();
 
-app.use('/users', userRoutes);
+app.use('/items', itemRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
 
-export const getUsers = async () => {
+export const getItems = async () => {
     try {
-        const response = await axios.get(`${API_URL}/users`);
+        const response = await axios.get(`${API_URL}/items`);
         return response.data;
     } catch (error) {
         console.error('Error fetching users:', error);
