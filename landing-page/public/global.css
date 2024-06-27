@@ -4,7 +4,6 @@
   padding: 0;
   margin: 0;
   color: #f1f1f1;
-  text-align: center;
 }
 body {
   display: flex;
@@ -200,6 +199,7 @@ input:-webkit-autofill:active {
   justify-content: center;
   align-items: center;
   padding: 50px;
+  text-align: center;
   
   border: #161616 2px solid;
 }
@@ -221,6 +221,29 @@ input:-webkit-autofill:active {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+.singleItemContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.singleItemImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.varientSelection {
+  display: flex;
+  gap: 10px;
+}
+.singleVarientSelection {
+  border: #161616 2px solid;
+  padding: 5px;
+}
+.singleVarientSelection:hover {
+  border: #f1f1f1 2px solid;
+}
+select {
+  background-color: transparent;
 }
 
 @media screen and (max-width: 800px) {

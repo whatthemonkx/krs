@@ -16,7 +16,7 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
   useEffect(() => {
     const calculateTotalPrice = () => {
       return cart.reduce((total, item) => {
-        return total + item.price * item.quantity;
+        return total + item.item_price * item.quantity;
       }, 0);
     };
 
@@ -40,6 +40,8 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
     router.push(`/payment?sessionId=${sessionId}`);
   };
 
+  // console.log(cart)
+
   return (
     <Drawer isOpen={isOpen} placement='right' onClose={onClose} finalFocusRef={btnRef}>
       <DrawerOverlay />
@@ -49,13 +51,13 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
         <DrawerBody>
           <div>
             {cart.filter(item => item.quantity != 0).map((item) => (
-              <div key={item.id}>
-                <h3>{item.name}</h3>
-                <p>Price: ${item.price}</p>
+              <div key={item.item_id}>
+                <h3>{item.item_name}</h3>
+                <p>Price: ${item.item_price}</p>
                 <p>Quantity: {item.quantity}</p>
-                <button onClick={() => removeFromCart(item.id)}>Remove</button>
-                <button onClick={() => updateCartItem(item.id, item.quantity + 1)}>+</button>
-                <button onClick={item.quantity === 1 ? () => removeFromCart(item.id) : () => updateCartItem(item.id, item.quantity - 1)}>-</button>
+                <button onClick={() => removeFromCart(item.item_id)}>Remove</button>
+                <button onClick={() => updateCartItem(item.item_id, item.quantity + 1)}>+</button>
+                <button onClick={item.quantity === 1 ? () => removeFromCart(item.item_id) : () => updateCartItem(item.item_id, item.quantity - 1)}>-</button>
               </div>
             ))}
           </div>

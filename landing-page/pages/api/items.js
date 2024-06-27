@@ -10,3 +10,12 @@ export const getItems = async () => {
         console.error('Error fetching users:', error);
     }
 };
+
+export const getSingleItems = async (itemId) => {
+    try {
+        const response = await axios.get(`${API_URL}/items/${itemId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
