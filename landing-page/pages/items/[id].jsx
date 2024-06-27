@@ -13,7 +13,7 @@ const AccountPage = () => {
     id: null,
     name: '',
     sizes: [],
-    images: [{ name: '' }], // Adjust with appropriate default structure
+    images: [{ name: '' }],
   });
   const router = useRouter();
   const { id } = router.query;
@@ -44,6 +44,24 @@ const AccountPage = () => {
     setQuantity(null);
     setMaxQuantity(null);
   };
+
+  const handleSizeChange = (value) => {
+    const selectedSizeId = parseInt(value);
+    if (selectedSizeId !== 0) { 
+      setSize(selectedSizeId);
+      const selectedSize = currentItem.sizes.find(size => size.id === selectedSizeId);
+      if (selectedSize) {
+        setMaxQuantity(selectedSize.quantity);
+        setQuantity(1);
+      }
+    } else {
+      setSize(''); 
+      setMaxQuantity(null); 
+      setQuantity(null);
+    }
+  };
+
+  console.log(maxQuantity)
 
   return (
     <div className='pageContainer'>
@@ -78,28 +96,24 @@ const AccountPage = () => {
                 ))}
               </div>
               <div>${item.item_price}</div>
-
-
-
-                <label htmlFor="size">Select size: </label>
-              <select name="size" id="size" onChange={(e) => { setSize(e.target.value); setMaxQuantity(currentItem.sizes.filter(sizes => sizes.id === parseInt(e.target.value))[0].quantity) }}>
+              <label htmlFor="size">Select size: </label>
+              <select name="size" id="size" onChange={(e) => handleSizeChange(e.target.value)}>
+                <option value="0" style={{ color: "black" }}>Size</option>
                 {currentItem.sizes.map((size) => (
                   <option key={size.id} value={size.id} style={{ color: "black" }}>{size.name}</option>
                 ))}
-              </select><br />
-
-
-
-
-
+              </select>
+              <br />
               {maxQuantity !== null && 
-              <>
-              <label htmlFor="quantity">Select quantity: </label>
-              <select name="quantity" id="quantity" onChange={(e) => setQuantity(e.target.value)}>
-                {[...Array(maxQuantity)].map((_, index) => (
-                  <option key={index + 1} value={index + 1} style={{ color: "black" }}>{index + 1}</option>
-                ))}
-              </select></>}
+                <>
+                  <label htmlFor="quantity">Select quantity: </label>
+                  <select name="quantity" id="quantity" onChange={(e) => setQuantity(e.target.value)}>
+                    {[...Array(maxQuantity)].map((_, index) => (
+                      <option key={index + 1} value={index + 1} style={{ color: "black" }}>{index + 1}</option>
+                    ))}
+                  </select>
+                </>
+              }
               <div><button onClick={handleAddToCart}>Add to Cart</button></div>
             </div>
           </div>
