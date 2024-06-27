@@ -29,13 +29,11 @@ const Product = ({ item }) => {
     addToCart({ ...item, quantity: 1 });
   };
 
-  console.log(`${process.env.NEXT_PUBLIC_SERVER_LINK}/itemImages/${item.variations[0].images[0].name}`)
-
   return (
     <div>
       <img src={`${process.env.NEXT_PUBLIC_SERVER_LINK}/itemImages/${item.variations[0].images[0].name}`} alt="" />
-      <h3>{item.name}</h3>
-      <p>Price: ${item.price}</p>
+      <h3>{item.item_name}</h3>
+      <p>Price: ${item.item_price}</p>
     </div>
   );
 };

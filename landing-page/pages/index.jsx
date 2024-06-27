@@ -18,8 +18,6 @@ export default function Home() {
     fetchItems();
   }, []);
 
-  console.log(items);
-
   return (
     <>
       <Navbar />

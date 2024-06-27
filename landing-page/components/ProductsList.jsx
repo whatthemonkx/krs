@@ -14,13 +14,13 @@ const ProductsList = () => {
     fetchItems();
   }, []);
 
-  console.log(items);
+  console.log(items)
 
   return (
     <div>
       <ul>
         {items.map((item) => (
-          <li key={item.id}>
+          <li key={item.item_id}>
             <Product item={item} />
           </li>
         ))}

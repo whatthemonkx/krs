@@ -48,8 +48,6 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  console.log(cart)
-
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateCartItem }}>
       {children}
