@@ -4,6 +4,7 @@
   padding: 0;
   margin: 0;
   color: #f1f1f1;
+  text-align: center;
 }
 body {
   display: flex;
@@ -160,11 +161,14 @@ input:-webkit-autofill:active {
   animation: grain 8s steps(10) infinite;
 }
 .navbar {
-  width: 100vw;
+  width: 100%;
   padding: 0px 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 .title {
   font-family: "Alfa Slab One", serif;
@@ -174,4 +178,74 @@ input:-webkit-autofill:active {
 .DrawerFooter {
   display: flex;
   justify-content: space-between;
+}
+.pageContainer {
+  width: 99vw;
+}
+.itemsContainer {
+  width: 66vw;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+.itemsSection {
+  display: flex;
+  justify-content: center;
+  margin-top: 105px;
+  padding-bottom: 105px;
+}
+.singleItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  
+  border: #161616 2px solid;
+}
+.singleItem:hover {
+  border: #f1f1f1 2px solid;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #161616;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media screen and (max-width: 800px) {
+  .itemsContainer {
+    gap: 20px;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .title {
+    font-size: 45px;
+  }
+  .itemsSection {
+    margin-top: 68px;
+    padding-bottom: 68px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .title {
+    font-size: 24px;
+  }
+  .itemsSection {
+    margin-top: 36px;
+    padding-bottom: 36px;
+  }
 }

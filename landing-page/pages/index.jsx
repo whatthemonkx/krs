@@ -19,13 +19,13 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <div className='pageContainer'>
       <Navbar />
       <div>
         <div>
           <ProductsList />
         </div>
       </div>
-    </>
+    </div>
   );
 }

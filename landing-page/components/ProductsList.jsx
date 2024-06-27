@@ -17,14 +17,14 @@ const ProductsList = () => {
   console.log(items)
 
   return (
-    <div>
-      <ul>
+    <div className='itemsSection'>
+      <div className='itemsContainer'>
         {items.map((item) => (
-          <li key={item.item_id}>
+          <div key={item.item_id}>
             <Product item={item} />
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
