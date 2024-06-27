@@ -25,17 +25,8 @@ export default function Home() {
       <Navbar />
       <div>
         <div>
-          <h1>Welcome to Our Store</h1>
           <ProductsList />
-          <a href="/cart"><button>go to cart</button></a>
         </div>
-        <Link href='/about' color='blue.400' _hover={{ color: 'blue.500' }}>
-          About
-        </Link>
-        <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
-          Open
-        </Button>
-        <Cart isOpen={isOpen} onClose={onClose} btnRef={btnRef} />
       </div>
     </>
   );
