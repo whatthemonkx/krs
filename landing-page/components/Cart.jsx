@@ -51,13 +51,13 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
         <DrawerBody>
           <div>
             {cart.filter(item => item.quantity != 0).map((item) => (
-              <div key={item.item_id}>
+              <div key={item.sizeId}>
                 <h3>{item.item_name}</h3>
                 <p>Price: ${item.item_price}</p>
                 <p>Quantity: {item.quantity}</p>
-                <button onClick={() => removeFromCart(item.item_id)}>Remove</button>
-                <button onClick={() => updateCartItem(item.item_id, item.quantity + 1)}>+</button>
-                <button onClick={item.quantity === 1 ? () => removeFromCart(item.item_id) : () => updateCartItem(item.item_id, item.quantity - 1)}>-</button>
+                <button onClick={() => removeFromCart(item.sizeId)}>Remove</button>
+                <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button>
+                <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button>
               </div>
             ))}
           </div>
