@@ -81,8 +81,8 @@ const AccountPage = () => {
 
 
 
+                <label htmlFor="size">Select size: </label>
               <select name="size" id="size" onChange={(e) => { setSize(e.target.value); setMaxQuantity(currentItem.sizes.filter(sizes => sizes.id === parseInt(e.target.value))[0].quantity) }}>
-                <option value="" style={{ color: "black" }}>Size</option>
                 {currentItem.sizes.map((size) => (
                   <option key={size.id} value={size.id} style={{ color: "black" }}>{size.name}</option>
                 ))}
@@ -92,12 +92,14 @@ const AccountPage = () => {
 
 
 
-              {maxQuantity !== null && <select name="quantity" id="quantity" onChange={(e) => setQuantity(e.target.value)}>
-                <option value='null' style={{ color: "black" }}>Select Quantity</option>
+              {maxQuantity !== null && 
+              <>
+              <label htmlFor="quantity">Select quantity: </label>
+              <select name="quantity" id="quantity" onChange={(e) => setQuantity(e.target.value)}>
                 {[...Array(maxQuantity)].map((_, index) => (
                   <option key={index + 1} value={index + 1} style={{ color: "black" }}>{index + 1}</option>
                 ))}
-              </select>}
+              </select></>}
               <div><button onClick={handleAddToCart}>Add to Cart</button></div>
             </div>
           </div>
