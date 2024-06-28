@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import React from "react";
 import CheckoutForm from "../components/CheckoutForm";
+import { useContext, useEffect, useState } from 'react';
+import CartContext from '../context/CartContext';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -11,6 +12,9 @@ const PaymentPage = () => {
   const router = useRouter();
   const { sessionId } = router.query;
   const [clientSecret, setClientSecret] = useState(null);
+  const { cart, removeFromCart, updateCartItem } = useContext(CartContext);
+  const [hydrated, setHydrated] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     if (sessionId) {
@@ -22,20 +26,40 @@ const PaymentPage = () => {
 
       fetchPaymentIntent();
     }
+
+    setHydrated(true);
   }, [sessionId]);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      return cart.reduce((total, item) => {
+        return total + item.item_price * item.quantity;
+      }, 0);
+    };
+
+    setTotalPrice(calculateTotalPrice());
+  }, [cart]);
+
+  if (!hydrated) {
+    return null; 
+  }  
 
   const appearance = {
     theme: 'flat',
     variables: {
       fontFamily: 'Courier New, Courier, monospace',
-      // fontWeightNormal: '500',
+      fontWeightNormal: '500',
       // borderRadius: '8px',
-      // colorBackground: '#0A2540',
+      colorBackground: '#000',
       colorPrimary: '#A31621',
       // accessibleColorOnColorPrimary: '#1A1B25',
-      // colorText: 'white',
-      // colorTextSecondary: 'white',
-      // colorTextPlaceholder: '#ABB2BF',
+      colorText: 'white',
+      colorTextSecondary: 'white',
+      colorTextPlaceholder: '#818181',
       // tabIconColor: 'white',
       // logoColor: 'dark'
     },
@@ -44,6 +68,10 @@ const PaymentPage = () => {
         border: 'none',
         backgroundColor: '#A31621',
       },
+      '.Input': {
+        backgroundColor: '#000',
+        border: '1px solid #fff'
+      }
     }
   };
 
@@ -53,13 +81,57 @@ const PaymentPage = () => {
   };
 
   return (
-    <div>
-      {clientSecret && (
-        <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm clientSecret={clientSecret} />
-        </Elements>
-      )}
-    </div>
+    <>
+      <div className='checkoutNavbar'>
+        <a href='/'><div className='title'>KoNGA-71</div></a>
+        <h3>Total Price: ${totalPrice.toFixed(2)}</h3>  
+      </div>
+      <div className='checkoutContainer'>
+        <div className='checkoutCart'>
+          <div>
+            {cart.filter(item => item.quantity != 0).map((item) => (
+              // <div key={item.sizeId}>
+              //   <h3>{item.item_name}</h3>
+              //   <p>Price: ${item.item_price}</p>
+              //   <p>Quantity: {item.quantity}</p>
+              //   <button onClick={() => removeFromCart(item.sizeId)}>Remove</button>
+              //   <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button>
+              //   <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button>
+              // </div>
+              <div key={item.sizeId} className='cartItem'>
+                <img
+                  className='mainpageItemImage'
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}`}
+                  alt=""
+                  width={100}
+                />
+                <div>
+                  <div>{item.item_name} </div>
+                  <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].name} / {item.variations.filter(variants => variants.id === parseInt(item.variant))[0].sizes.filter(size => size.id === parseInt(item.sizeId))[0].name}</div>
+                </div>
+                {/* <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}</div> */}
+                <div>
+                  <div>${item.item_price * item.quantity}</div>
+                  <div className='cartQuantityChanger'>
+                    {/* <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button> */}
+                    <div className='checkoutQuantity'>{item.quantity}</div>
+                    {/* <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button> */}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* <h3>Total Price: ${totalPrice.toFixed(2)}</h3>   */}
+        </div>
+        <div className='checkoutForm'>
+          {clientSecret && (
+            <Elements options={options} stripe={stripePromise}>
+              <CheckoutForm clientSecret={clientSecret} />
+            </Elements>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 

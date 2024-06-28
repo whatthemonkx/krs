@@ -1,18 +1,24 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import React, { useEffect, useState } from "react";
+import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [fname, setFname] = useState('');
-  const [lname, setLname] = useState('');
-  const [email, setEmail] = useState('');
-  const [fnameMisiing, setFnameMissing] = useState(false);
-  const [lnameMisiing, setLnameMissing] = useState(false);
-  const [emailMisiing, setEmailMissing] = useState(false);
+  const [emailMissing, setEmailMissing] = useState(false);
+  const [address, setAddress] = useState({
+    name: '',
+    address: {
+      line1: '',
+      line2: '',
+      city: '',
+      state: '',
+      postal_code: '',
+      country: 'US'
+    },
+    email: ''
+  });
 
   useEffect(() => {
     if (!stripe) {
@@ -52,16 +58,8 @@ export default function CheckoutForm() {
       return;
     }
 
-    if (fname.replace(/\s+/g, '') == "" || lname.replace(/\s+/g, '') == "" || email.replace(/\s+/g, '') == "") {
-      if (fname.replace(/\s+/g, '') == "") {
-        setFnameMissing(true)
-      }
-      if (lname.replace(/\s+/g, '') == "") {
-        setLnameMissing(true)
-      } 
-      if (email.replace(/\s+/g, '') == "") {
-        setEmailMissing(true)
-      }
+    if (!address.email) {
+      setEmailMissing(true);
       return;
     }
 
@@ -74,7 +72,7 @@ export default function CheckoutForm() {
       },
     });
 
-    if (error.type === "card_error" || error.type === "validation_error") {
+    if (error) {
       setMessage(error.message);
     } else {
       setMessage("An unexpected error occurred.");
@@ -83,26 +81,41 @@ export default function CheckoutForm() {
     setIsLoading(false);
   };
 
+  const handleAddressChange = (event) => {
+    if (event.complete) {
+      setAddress({
+        ...address,
+        name: event.value.name,
+        address: {
+          ...event.value.address
+        }
+      });
+    }
+  };
+
   const paymentElementOptions = {
     layout: "tabs",
   };
 
+  console.log(address);
+
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
+      <AddressElement 
+        id="address-element" 
+        options={{
+          mode: 'shipping', 
+          defaultValues: {
+            name: `${address.name}`, 
+            address: address.address,
+          },
+        }} 
+        onChange={handleAddressChange}
+      />
       <div className="checkoutFormContainer">
-        <label htmlFor="" className="checkoutFormLabel">First Name</label>
-        <input type="text" className={fnameMisiing ? "checkoutFormInput checkoutFormInputError" : "checkoutFormInput"} placeholder="John" value={fname} onChange={(e) => { setFname(e.target.value); setFnameMissing(false);}}/>
-        {fnameMisiing && <p className="errorMessage">Your first name is incomplete.</p>}
-      </div>
-      <div className="checkoutFormContainer">
-        <label htmlFor="" className="checkoutFormLabel">Last Name</label>
-        <input type="text" className={lnameMisiing ? "checkoutFormInput checkoutFormInputError" : "checkoutFormInput"} placeholder="Smith" value={lname} onChange={(e) => {setLname(e.target.value); setLnameMissing(false);}}/>
-        {lnameMisiing && <p className="errorMessage">Your last name is incomplete.</p>}
-      </div>
-      <div className="checkoutFormContainer">
-        <label htmlFor="" className="checkoutFormLabel">Email</label>
-        <input type="email" className={emailMisiing ? "checkoutFormInput checkoutFormInputError" : "checkoutFormInput"} placeholder="Johnsmith@gmail.com" value={email} onChange={(e) => {setEmail(e.target.value); setEmailMissing(false);}}/>
-        {emailMisiing && <p className="errorMessage">Your email is incomplete.</p>}
+        <label htmlFor="email" className="checkoutFormLabel">Email</label>
+        <input type="email" id="email" className={emailMissing ? "checkoutFormInput checkoutFormInputError" : "checkoutFormInput"} placeholder="Email" value={address.email} onChange={(e) => { setAddress({...address, email: e.target.value}); setEmailMissing(false); }} />
+        {emailMissing && <p className="errorMessage">Please provide your email.</p>}
       </div>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button disabled={isLoading || !stripe || !elements} id="submit" className="checkoutFormButton">

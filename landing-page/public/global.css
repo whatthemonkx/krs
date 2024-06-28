@@ -30,13 +30,13 @@ section {
 }
 .checkoutFormInput {
   padding: 1rem;
-  background-color: #f1f1f1;
+  background-color: #000000;
   border-radius: 12px;
   transition: background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
   display: block;
   width: 292px;
-  margin-top: 0.25rem;
-  color: #30313d;
+  height: 52.39px;
+  color: rgb(255, 255, 255);
   -moz-appearance: none;
   appearance: none;
   border-style: none;
@@ -47,10 +47,14 @@ section {
   outline-width: 2px;
   outline: none;
   font-size: 1rem;
-  border: transparent 2px solid;
+  border: white 1px solid;
+}
+.checkoutFormInput::placeholder {
+  color: #818181;
 }
 .checkoutFormInputError {
-  border: #DF1B41 2px solid;
+  color: #df1b41;
+  box-shadow: 0 0 0 2px #df1b41;
 }
 .errorMessage {
   color: #DF1B41;
@@ -64,8 +68,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: #30313d;; /* Ensure text color is as expected */
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #ffffff;; 
 }
 .checkoutFormButton {
   padding: 1rem;
@@ -91,11 +95,12 @@ input:-webkit-autofill:active {
 }
 .checkoutFormContainer {
   margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
 }
 .checkoutFormLabel {
   font-size: 0.93rem;
   transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-  color: #30313d;
+  color: white;
   font-weight: 400;
   line-height: 1.15;
 }
@@ -168,6 +173,14 @@ input:-webkit-autofill:active {
   position: fixed;
   top: 0;
   left: 0;
+}
+.checkoutNavbar {
+  width: 100%;
+  padding: 0px 50px 20px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .title {
   font-family: "Alfa Slab One", serif;
@@ -257,17 +270,54 @@ select {
 .cartQuantityChanger button {
   padding: 5px 10px;
 }
+.checkoutQuantity {
+  padding: 5px 10px;
+}
 .cartItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
   text-align: center;
+}
+.checkoutContainer {
+  display: flex;
+  gap: 50px;
+  max-height: calc(100vh - 166px);
+  overflow: hidden;
+  /* display: grid;
+  grid-template-columns: 1fr 1fr; */
+}
+.checkoutCart {
+  overflow-y: scroll;
+  padding-right: 20px;
+}
+.checkoutForm {
+  padding-right: 20px;
+  padding-left: 2px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 @media screen and (max-width: 800px) {
   .itemsContainer {
     gap: 20px;
     grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 710px) {
+  .checkoutContainer {
+    max-height: none;
+    flex-direction: column;
+    padding-bottom: 50px;
+  }
+  .checkoutCart {
+    max-height: 288px;
+  }
+  .checkoutForm {
+    overflow-x: initial;
+    overflow-y: initial;
   }
 }
 
