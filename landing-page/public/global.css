@@ -225,6 +225,7 @@ input:-webkit-autofill:active {
 .singleItemContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin: 0px 10px;
 }
 .singleItemImage {
   display: flex;
@@ -245,6 +246,23 @@ input:-webkit-autofill:active {
 select {
   background-color: transparent;
 }
+.cartQuantityChanger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: #161616 2px solid;
+  border-radius: 25px;
+  width: max-content;
+}
+.cartQuantityChanger button {
+  padding: 5px 10px;
+}
+.cartItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
 
 @media screen and (max-width: 800px) {
   .itemsContainer {
@@ -260,6 +278,12 @@ select {
   .itemsSection {
     margin-top: 68px;
     padding-bottom: 68px;
+  }
+  .singleItemContainer {
+    grid-template-columns: 1fr;
+  }
+  .navbar {
+    padding: 0px 20px;
   }
 }
 

@@ -40,7 +40,7 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
     router.push(`/payment?sessionId=${sessionId}`);
   };
 
-  console.log(cart[0].variations.filter(variants => variants.id === parseInt(1))[0].sizes.filter(size => size.id === parseInt(1))[0].name)
+  // console.log(cart[0].variations.filter(variants => variants.id === parseInt(1))[0].sizes.filter(size => size.id === parseInt(1))[0].name)
   // [0].images[0].name
 
   return (
@@ -60,37 +60,40 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
               //   <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button>
               //   <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button>
               // </div>
-              <div key={item.sizeId}>
+              <div key={item.sizeId} className='cartItem'>
                 <img
                   className='mainpageItemImage'
                   src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}`}
                   alt=""
                   width={100}
                 />
-                <div>{item.item_name} </div>
-                <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].name} / {item.variations.filter(variants => variants.id === parseInt(item.variant))[0].sizes.filter(size => size.id === parseInt(item.sizeId))[0].name}</div>
-                {/* <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}</div> */}
-                <div>${item.item_price * item.quantity}</div>
                 <div>
-                  <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button>
-                  {item.quantity}
-                  <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button>
+                  <div>{item.item_name} </div>
+                  <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].name} / {item.variations.filter(variants => variants.id === parseInt(item.variant))[0].sizes.filter(size => size.id === parseInt(item.sizeId))[0].name}</div>
                 </div>
-                <div></div>
+                {/* <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}</div> */}
+                <div>
+                  <div>${item.item_price * item.quantity}</div>
+                  <div className='cartQuantityChanger'>
+                    <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button>
+                    <div>{item.quantity}</div>
+                    <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
           
         </DrawerBody>
 
-        <DrawerFooter><h3>Total Price: ${totalPrice.toFixed(2)}</h3>
-        <Flex justify="space-between" width="100%">
-          <Button variant='outline' onClick={handleCheckout} color="fff">
-            Checkout
-          </Button>          
-          <Button variant='outline' onClick={onClose} color="fff">
-            Cancel
-          </Button></Flex>
+        <DrawerFooter>
+          {/* <h3>Total Price: ${totalPrice.toFixed(2)}</h3> */}
+          <Flex width="100%" flexDirection={'column'} gap={3}>
+            <h3>Total Price: ${totalPrice.toFixed(2)}</h3>         
+            <Button variant='outline' onClick={handleCheckout} color="fff" width="100%">
+              Proceed to checkout
+            </Button>          
+          </Flex>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
