@@ -90,7 +90,15 @@ const Cart = ({ isOpen, onClose, btnRef }) => {
           {/* <h3>Total Price: ${totalPrice.toFixed(2)}</h3> */}
           <Flex width="100%" flexDirection={'column'} gap={3}>
             <h3>Total Price: ${totalPrice.toFixed(2)}</h3>         
-            <Button variant='outline' onClick={handleCheckout} color="fff" width="100%">
+            <Button 
+              variant='outline' 
+              onClick={handleCheckout} 
+              color="fff" 
+              width="100%"
+              _hover={{ bg: 'transparent', borderColor: 'currentColor' }}
+              _active={{ bg: 'transparent', borderColor: 'currentColor' }} 
+              _focus={{ boxShadow: 'none' }}
+            >
               Proceed to checkout
             </Button>          
           </Flex>
