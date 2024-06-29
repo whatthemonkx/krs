@@ -20,7 +20,6 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (item) => {
-    console.log(item)
     setCart((prevCart) => {
       const existingItem = prevCart.find(cartItem => cartItem.sizeId === item.sizeId);
       if (existingItem) {
@@ -49,8 +48,12 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateCartItem }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateCartItem, clearCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from 'react';
 import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import CartContext from '../context/CartContext';
+import { useRouter } from 'next/router';
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emailMissing, setEmailMissing] = useState(false);
@@ -19,6 +22,7 @@ export default function CheckoutForm() {
     },
     email: ''
   });
+  const { cart, removeFromCart, updateCartItem, clearCart } = useContext(CartContext);
 
   useEffect(() => {
     if (!stripe) {
@@ -65,15 +69,20 @@ export default function CheckoutForm() {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: "http://localhost:3000/success",
       },
+      redirect: 'if_required' 
     });
 
     if (error) {
       setMessage(error.message);
+    } else if (paymentIntent && paymentIntent.status === "succeeded") {
+      setMessage("Payment succeeded!");
+      clearCart();
+      router.push('/success'); 
     } else {
       setMessage("An unexpected error occurred.");
     }
@@ -96,8 +105,6 @@ export default function CheckoutForm() {
   const paymentElementOptions = {
     layout: "tabs",
   };
-
-  console.log(address);
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
