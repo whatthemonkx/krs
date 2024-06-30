@@ -5,6 +5,7 @@ import React from "react";
 import CheckoutForm from "../components/CheckoutForm";
 import { useContext, useEffect, useState } from 'react';
 import CartContext from '../context/CartContext';
+import Loading from '../components/Loading';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -12,9 +13,10 @@ const PaymentPage = () => {
   const router = useRouter();
   const { sessionId } = router.query;
   const [clientSecret, setClientSecret] = useState(null);
-  const { cart, removeFromCart, updateCartItem } = useContext(CartContext);
+  const { cart } = useContext(CartContext);
   const [hydrated, setHydrated] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (sessionId) {
@@ -24,7 +26,11 @@ const PaymentPage = () => {
         setClientSecret(clientSecret);
       };
 
-      fetchPaymentIntent();
+      fetchPaymentIntent().finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+      });
     }
 
     setHydrated(true);
@@ -78,6 +84,7 @@ const PaymentPage = () => {
 
   return (
     <>
+      {loading && <Loading />}
       <div className='checkoutNavbar'>
         <a href='/'><div className='title'>KoNGA-71</div></a>
         <h3>Total Price: ${totalPrice.toFixed(2)}</h3>  

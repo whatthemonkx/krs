@@ -3,17 +3,13 @@ import { useDisclosure } from '@chakra-ui/react';
 import Cart from './Cart';
 import { useContext, useEffect, useState } from 'react';
 import CartContext from '../context/CartContext';
-import { useRouter } from 'next/router';
-import { Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Button } from '@chakra-ui/react';
 
 
 const Navbar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = useRef();
-    const { cart, removeFromCart, updateCartItem } = useContext(CartContext);
-    const [hydrated, setHydrated] = useState(false);
+    const { cart } = useContext(CartContext);
     const [cartQuantity, setCartQuantity] = useState(0);
-    const router = useRouter();
 
     useEffect(() => {
         const calculateCartQuantity = () => {

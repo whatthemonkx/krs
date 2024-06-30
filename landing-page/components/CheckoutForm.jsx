@@ -25,7 +25,7 @@ export default function CheckoutForm() {
     },
     email: ''
   });
-  const { cart, removeFromCart, updateCartItem, clearCart } = useContext(CartContext);
+  const { cart, clearCart } = useContext(CartContext);
 
   useEffect(() => {
     if (!stripe) {
@@ -60,6 +60,7 @@ export default function CheckoutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
     const ids = [];
 
@@ -159,6 +160,7 @@ export default function CheckoutForm() {
         </span>
       </button>
       {message && <div id="payment-message">{message}</div>}
+      {error !== '' && <div id="payment-message" style={{width: "290px"}}>{error}</div>}
     </form>
   );
 }

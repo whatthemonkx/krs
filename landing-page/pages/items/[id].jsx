@@ -3,9 +3,11 @@ import Navbar from '../../components/Navbar';
 import React, { useEffect, useState, useContext } from 'react';
 import { getSingleItems } from '../api/items';
 import CartContext from '../../context/CartContext';
+import Loading from '../../components/Loading';
 
 const AccountPage = () => {
   const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [size, setSize] = useState(null);
   const [quantity, setQuantity] = useState(null);
   const [maxQuantity, setMaxQuantity] = useState(null);
@@ -29,7 +31,11 @@ const AccountPage = () => {
       }
     };
 
-    fetchItems();
+    fetchItems().finally(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    });
   }, [id]);
 
   const handleAddToCart = () => {
@@ -64,6 +70,7 @@ const AccountPage = () => {
 
   return (
     <div className='pageContainer'>
+      {loading && <Loading />}
       <Navbar />
       <div className='itemsSection'>
         {item && (

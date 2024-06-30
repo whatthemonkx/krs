@@ -1,6 +1,5 @@
 import Product from './Product';
-import products from '../data/products';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getItems } from '../pages/api/items';
 
 const ProductsList = () => {

@@ -1,29 +1,33 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getItems } from './api/items';
 import ProductsList from '../components/ProductsList';
-import { Link, Button, Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Input, useDisclosure } from '@chakra-ui/react';
-import Cart from '../components/Cart';
 import Navbar from '../components/Navbar';
+import Loading from '../components/Loading';
 
 export default function Home() {
   const [items, setItems] = useState([]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = useRef();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
       const items = await getItems();
       setItems(items);
     };
-    fetchItems();
+
+    fetchItems().finally(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    });
   }, []);
 
   return (
     <div className='pageContainer'>
+      {loading && <Loading />}
       <Navbar />
       <div>
         <div>
-          <ProductsList />
+          <ProductsList items={items} /> 
         </div>
       </div>
     </div>

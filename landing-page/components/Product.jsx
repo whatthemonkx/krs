@@ -1,13 +1,4 @@
-import { useContext } from 'react';
-import CartContext from '../context/CartContext';
-
 const Product = ({ item }) => {
-  const { addToCart } = useContext(CartContext);
-
-  const handleAddToCart = () => {
-    addToCart({ ...item, quantity: 1 });
-  };
-
   return (
     <a href={`/items/${item.item_id}`}>
       <div className='singleItem'>
