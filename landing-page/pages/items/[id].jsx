@@ -61,7 +61,7 @@ const AccountPage = () => {
     }
   };
 
-  console.log(currentItem)
+  // console.log(currentItem)
 
   return (
     <div className='pageContainer'>
