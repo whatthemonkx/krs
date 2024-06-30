@@ -14,7 +14,7 @@ const AccountPage = () => {
     name: '',
     sizes: [],
     images: [{ name: '' }],
-  });
+  }); 
   const router = useRouter();
   const { id } = router.query;
   const { addToCart } = useContext(CartContext);

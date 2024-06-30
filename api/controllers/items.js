@@ -93,3 +93,16 @@ GROUP BY i.id;
     });
 };
 
+export const getSpecificSizes = (req, res) => {
+    const ids = req.body.id;
+
+    const placeholders = ids.map(() => '?').join(',');
+
+    const q = `SELECT * FROM store.sizes WHERE id IN (${placeholders});`;
+
+    db.query(q, ids, (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};
+

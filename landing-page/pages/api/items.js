@@ -19,3 +19,15 @@ export const getSingleItems = async (itemId) => {
         console.error('Error fetching users:', error);
     }
 };
+
+export const getSizes = async (ids) => {
+    // const ids = [1, 2, 5]
+    try {
+        const response = await axios.post(`${API_URL}/items/sizes`, {
+            id: ids
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};

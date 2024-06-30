@@ -3,6 +3,7 @@ import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/
 import CartContext from '../context/CartContext';
 import { useRouter } from 'next/router';
 import { processSale } from '../pages/api/sales';
+import { getSizes } from '../pages/api/items';
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -11,6 +12,7 @@ export default function CheckoutForm() {
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emailMissing, setEmailMissing] = useState(false);
+  const [error, setError] = useState('');
   const [address, setAddress] = useState({
     name: '',
     address: {
@@ -23,9 +25,9 @@ export default function CheckoutForm() {
     },
     email: ''
   });
-  console.log(address)
+  // console.log(address)
   const { cart, removeFromCart, updateCartItem, clearCart } = useContext(CartContext);
-  console.log(cart)
+  // console.log(cart)
 
   useEffect(() => {
     if (!stripe) {
@@ -61,6 +63,25 @@ export default function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const ids = [];
+
+    for (let i = 0; i < cart.length; i++) {
+      ids.push(cart[i].sizeId);
+    }
+
+    const items = await getSizes(ids);
+    const itemsReversed = items.reverse();
+    // console.log(itemsReversed)
+    // console.log(cart)
+
+    for (let i = 0; i < cart.length; i++) {
+      if (cart[i].quantity > itemsReversed[i].quantity) {
+        // console.log(cart[i].variations.find(variant => variant.id === parseInt(cart[i].variant)).name)
+        setError(`Only ${itemsReversed[i].quantity} ${cart[i].item_name}: ${cart[i].variations.find(variant => variant.id === parseInt(cart[i].variant)).name} / ${itemsReversed[i].name} availble!`)
+        return
+      }
+    }
+    
     if (!stripe || !elements) {
       return;
     }
