@@ -303,6 +303,10 @@ select {
   margin: 0px 20px;
 }
 
+.selection {
+  color: #000000;
+}
+
 @media screen and (max-width: 800px) {
   .itemsContainer {
     gap: 20px;

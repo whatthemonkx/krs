@@ -61,7 +61,7 @@ const AccountPage = () => {
     }
   };
 
-  console.log(maxQuantity)
+  console.log(currentItem)
 
   return (
     <div className='pageContainer'>
@@ -98,9 +98,9 @@ const AccountPage = () => {
               <div>${item.item_price}</div>
               <label htmlFor="size">Select size: </label>
               <select name="size" id="size" onChange={(e) => handleSizeChange(e.target.value)}>
-                <option value="0" style={{ color: "black" }}>Size</option>
-                {currentItem.sizes.map((size) => (
-                  <option key={size.id} value={size.id} style={{ color: "black" }}>{size.name}</option>
+                <option value="0" className="selection">Size</option>
+                {currentItem.sizes.filter(size => size.quantity > 0).map((size) => (
+                  <option key={size.id} value={size.id} className="selection">{size.name}</option>
                 ))}
               </select>
               <br />
@@ -109,7 +109,7 @@ const AccountPage = () => {
                   <label htmlFor="quantity">Select quantity: </label>
                   <select name="quantity" id="quantity" onChange={(e) => setQuantity(e.target.value)}>
                     {[...Array(maxQuantity)].map((_, index) => (
-                      <option key={index + 1} value={index + 1} style={{ color: "black" }}>{index + 1}</option>
+                      <option key={index + 1} value={index + 1} className="selection">{index + 1}</option>
                     ))}
                   </select>
                 </>
