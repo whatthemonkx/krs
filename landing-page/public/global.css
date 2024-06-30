@@ -298,6 +298,10 @@ select {
   overflow-x: hidden;
   overflow-y: scroll;
 }
+.successCheckout {
+  text-align: center;
+  margin: 0px 20px;
+}
 
 @media screen and (max-width: 800px) {
   .itemsContainer {

@@ -1,5 +1,6 @@
 import express from "express";
 import itemRoutes from "./routes/items.js"
+import salesRoutes from "./routes/sales.js"
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -10,6 +11,7 @@ app.use(cookieParser());
 app.use(express.json())
 
 app.use("/items", itemRoutes)
+app.use("/sales", salesRoutes)
 
 const PORT = process.env.PORT || 5000;
 

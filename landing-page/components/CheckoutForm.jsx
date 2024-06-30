@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CartContext from '../context/CartContext';
 import { useRouter } from 'next/router';
+import { processSale } from '../pages/api/sales';
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -22,7 +23,9 @@ export default function CheckoutForm() {
     },
     email: ''
   });
+  console.log(address)
   const { cart, removeFromCart, updateCartItem, clearCart } = useContext(CartContext);
+  console.log(cart)
 
   useEffect(() => {
     if (!stripe) {
@@ -81,6 +84,15 @@ export default function CheckoutForm() {
       setMessage(error.message);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       setMessage("Payment succeeded!");
+      processSale(
+        address.name,
+        address.address.line1,
+        address.address.line2,
+        address.address.postal_code,
+        address.address.state,
+        address.email,
+        cart,
+      )
       clearCart();
       router.push('/success'); 
     } else {
