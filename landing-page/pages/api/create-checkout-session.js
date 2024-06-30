@@ -1,4 +1,3 @@
-// pages/api/create-checkout-session.js
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
@@ -7,7 +6,7 @@ export default async function handler(req, res) {
 
     try {
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount, // Amount should be in the smallest currency unit (e.g., cents for USD)
+        amount: amount, 
         currency: 'usd',
       });
 

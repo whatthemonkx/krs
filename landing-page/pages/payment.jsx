@@ -53,15 +53,11 @@ const PaymentPage = () => {
     variables: {
       fontFamily: 'Courier New, Courier, monospace',
       fontWeightNormal: '500',
-      // borderRadius: '8px',
       colorBackground: '#000',
       colorPrimary: '#A31621',
-      // accessibleColorOnColorPrimary: '#1A1B25',
       colorText: 'white',
       colorTextSecondary: 'white',
       colorTextPlaceholder: '#818181',
-      // tabIconColor: 'white',
-      // logoColor: 'dark'
     },
     rules: {
       '.Tab--selected, .Tab--selected:focus, .Tab--selected:hover': {
@@ -90,14 +86,6 @@ const PaymentPage = () => {
         <div className='checkoutCart'>
           <div>
             {cart.filter(item => item.quantity != 0).map((item) => (
-              // <div key={item.sizeId}>
-              //   <h3>{item.item_name}</h3>
-              //   <p>Price: ${item.item_price}</p>
-              //   <p>Quantity: {item.quantity}</p>
-              //   <button onClick={() => removeFromCart(item.sizeId)}>Remove</button>
-              //   <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button>
-              //   <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button>
-              // </div>
               <div key={item.sizeId} className='cartItem'>
                 <img
                   className='mainpageItemImage'
@@ -109,19 +97,15 @@ const PaymentPage = () => {
                   <div>{item.item_name} </div>
                   <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].name} / {item.variations.filter(variants => variants.id === parseInt(item.variant))[0].sizes.filter(size => size.id === parseInt(item.sizeId))[0].name}</div>
                 </div>
-                {/* <div>{item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}</div> */}
                 <div>
                   <div>${item.item_price * item.quantity}</div>
                   <div className='cartQuantityChanger'>
-                    {/* <button onClick={() => updateCartItem(item.sizeId, item.quantity + 1)}>+</button> */}
                     <div className='checkoutQuantity'>{item.quantity}</div>
-                    {/* <button onClick={item.quantity === 1 ? () => removeFromCart(item.sizeId) : () => updateCartItem(item.sizeId, item.quantity - 1)}>-</button> */}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          {/* <h3>Total Price: ${totalPrice.toFixed(2)}</h3>   */}
         </div>
         <div className='checkoutForm'>
           {clientSecret && (

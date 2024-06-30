@@ -14,7 +14,6 @@ const ProductsList = () => {
     fetchItems();
   }, []);
 
-  // console.log(items)
 
   return (
     <div className='itemsSection'>

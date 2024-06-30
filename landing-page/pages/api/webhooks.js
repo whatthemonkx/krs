@@ -1,4 +1,3 @@
-// pages/api/webhooks.js
 import Stripe from 'stripe';
 import { buffer } from 'micro';
 import Cors from 'micro-cors';
