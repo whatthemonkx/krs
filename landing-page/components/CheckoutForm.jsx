@@ -11,6 +11,7 @@ export default function CheckoutForm() {
   const router = useRouter();
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [emailMissing, setEmailMissing] = useState(false);
   const [error, setError] = useState('');
   const [address, setAddress] = useState({
@@ -26,6 +27,16 @@ export default function CheckoutForm() {
     email: ''
   });
   const { cart, clearCart } = useContext(CartContext);
+
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      return cart.reduce((total, item) => {
+        return total + item.item_price * item.quantity;
+      }, 0);
+    };
+
+    setTotalPrice(calculateTotalPrice());
+  }, [cart]);
 
   useEffect(() => {
     if (!stripe) {
@@ -109,6 +120,7 @@ export default function CheckoutForm() {
         address.address.state,
         address.email,
         cart,
+        totalPrice,
       )
       clearCart();
       router.push('/success'); 

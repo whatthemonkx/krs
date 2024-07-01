@@ -1,49 +1,95 @@
-import {
-  Activity,
-  ArrowUpRight,
-  CircleUser,
-  CreditCard,
-  DollarSign,
-  Menu,
-  Package2,
-  Search,
-  Users,
-} from "lucide-react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+"use client";
+
+import { Truck, ArrowUpRight, CircleUser, Shirt , DollarSign, Menu, Package2, Search, ShoppingBag ,} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import Link from 'next/link';
+import { getSoldItems, getTransactions, getSoldoutSizes } from "./api/sales";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
+  const [sales, setSales] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [rev, setRev] = useState(0);
+  const [rev30Days, setRev30Days] = useState(0);
+  const [itemsSold, setItemsSold] = useState(0);
+  const [itemsSold30Days, setItemsSold30Days] = useState(0);
+  const totalSales = sales.filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).length;
+  const pendingOrders = sales.filter(item => item.status === "Pending").length;
+  const recentSale = [...sales].reverse().slice(0, 6);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const items = await getSoldItems();
+
+      const sales = await getTransactions();
+      setSales(sales);
+
+      const sizes = await getSoldoutSizes();
+      setSizes(sizes);
+
+      const calculateTotalPrice = () => {
+        return sales.reduce((total, item) => {
+          return total + item.totalPrice;
+        }, 0);
+      };
+      setRev(calculateTotalPrice())
+
+      const thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
+
+      const calculateTotalPrice30Days = () => {      
+        return sales
+          .filter(item => new Date(item.time) >= thirtyDaysAgo)
+          .reduce((total, item) => {
+            return total + item.totalPrice;
+          }, 0);
+      };
+      setRev30Days(calculateTotalPrice30Days())
+
+      const calculateTotalItemsSold = () => {
+        return items.reduce((total, item) => {
+          return total + item.quantity;
+        }, 0);
+      };
+      setItemsSold(calculateTotalItemsSold())
+
+      const calculateTotalItemsSold30Days = () => {
+        return items
+          .filter(item => new Date(item.time) >= thirtyDaysAgo)
+          .reduce((total, item) => {
+            return total + item.quantity;
+          }, 0);
+      };
+      setItemsSold30Days(calculateTotalItemsSold30Days())
+
+    };
+
+    fetchItems()
+  }, []);
+
+  function formatToDollar(amount) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+  
+    return `${month}/${day}/${year}`;
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -56,34 +102,22 @@ function Dashboard() {
             <span className="sr-only">Acme Inc</span>
           </Link>
           <Link
-            href="#"
+            href="/"
             className="text-foreground transition-colors hover:text-foreground"
           >
             Dashboard
           </Link>
           <Link
-            href="#"
+            href="/items"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Orders
+            Items
           </Link>
           <Link
-            href="#"
+            href="/sales"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Products
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Customers
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Analytics
+            Sales
           </Link>
         </nav>
         <Sheet>
@@ -106,47 +140,25 @@ function Dashboard() {
                 <Package2 className="h-6 w-6" />
                 <span className="sr-only">Acme Inc</span>
               </Link>
-              <Link href="#" className="hover:text-foreground">
+              <Link href="/" className="hover:text-foreground">
                 Dashboard
               </Link>
               <Link
-                href="#"
+                href="/items"
                 className="text-muted-foreground hover:text-foreground"
               >
-                Orders
+                Items
               </Link>
               <Link
-                href="#"
+                href="/sales"
                 className="text-muted-foreground hover:text-foreground"
               >
-                Products
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Customers
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Analytics
+                Sales
               </Link>
             </nav>
           </SheetContent>
         </Sheet>
-        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <form className="ml-auto flex-1 sm:flex-initial">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-              />
-            </div>
-          </form>
+        <div className="flex justify-end w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
@@ -171,53 +183,50 @@ function Dashboard() {
           <Card x-chunk="dashboard-01-chunk-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Total Revenue
+                Revenue
               </CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">${formatToDollar(rev30Days)}</div>
               <p className="text-xs text-muted-foreground">
-                +20.1% from last month
+              ${formatToDollar(rev)} all time
               </p>
             </CardContent>
           </Card>
           <Card x-chunk="dashboard-01-chunk-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Subscriptions
+                Sales
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <ShoppingBag  className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
+              <div className="text-2xl font-bold">+{totalSales} Sales</div>
               <p className="text-xs text-muted-foreground">
-                +180.1% from last month
+                {sales.length} sales all time
               </p>
             </CardContent>
           </Card>
           <Card x-chunk="dashboard-01-chunk-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Items Sold</CardTitle>
+              <Shirt  className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
+              <div className="text-2xl font-bold">+{itemsSold30Days} Items</div>
               <p className="text-xs text-muted-foreground">
-                +19% from last month
+                +{itemsSold} items all time
               </p>
             </CardContent>
           </Card>
           <Card x-chunk="dashboard-01-chunk-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
+              <Truck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
+              <div className="text-2xl font-bold">+{pendingOrders} Pending Orders</div>
             </CardContent>
           </Card>
         </div>
@@ -228,13 +237,13 @@ function Dashboard() {
           >
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
-                <CardTitle>Transactions</CardTitle>
+                <CardTitle>Sales</CardTitle>
                 <CardDescription>
-                  Recent transactions from your store.
+                  Recent sales from your store.
                 </CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
-                <Link href="#">
+                <Link href="/sales">
                   View All
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -245,83 +254,29 @@ function Dashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Customer</TableHead>
-                    <TableHead className="hidden xl:table-column">
-                      Type
-                    </TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead className="text-center">Date</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-9 w-9">
-                          <AvatarImage src="https://images.unsplash.com/photo-1605365912088-0d0fe4e84b30" />
-                          <AvatarFallback>OM</AvatarFallback>
-                        </Avatar>
-                        <span className="hidden lg:table-column">Olga Murray</span>
-                        <span className="font-medium lg:hidden">
-                          Olga M.
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Subscription
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">Pending</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      $1,209.99
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-9 w-9">
-                          <AvatarImage src="https://images.unsplash.com/photo-1605365912088-0d0fe4e84b30" />
-                          <AvatarFallback>OM</AvatarFallback>
-                        </Avatar>
-                        <span className="hidden lg:table-column">Olga Murray</span>
-                        <span className="font-medium lg:hidden">
-                          Olga M.
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Subscription
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">Pending</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      $1,209.99
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-9 w-9">
-                          <AvatarImage src="https://images.unsplash.com/photo-1605365912088-0d0fe4e84b30" />
-                          <AvatarFallback>OM</AvatarFallback>
-                        </Avatar>
-                        <span className="hidden lg:table-column">Olga Murray</span>
-                        <span className="font-medium lg:hidden">
-                          Olga M.
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden xl:table-column">
-                      Subscription
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">Pending</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      $1,209.99
-                    </TableCell>
-                  </TableRow>
+                  {recentSale.map((sale) => (
+                    <TableRow key={sale.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center">
+                          <span className="hidden lg:table-column">{sale.name}</span>
+                          <span className="font-medium lg:hidden">
+                            {sale.name}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {formatDate(sale.time)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        ${formatToDollar(sale.totalPrice)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </CardContent>
@@ -329,84 +284,26 @@ function Dashboard() {
 
           <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
+              <CardTitle>Low Stock</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-8">
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                  <AvatarFallback>OM</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Olivia Martin
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    olivia.martin@email.com
-                  </p>
+            <CardContent className="grid gap-8 max-h-[420px] overflow-y-auto">
+              {sizes.map((size) => (
+                <div key={size.size_id} className="flex items-center gap-4">
+                  <Avatar className="hidden h-9 w-9 sm:flex">
+                    <AvatarImage src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${size.image}`} alt="Avatar" />
+                    <AvatarFallback>{size.size_id}</AvatarFallback>
+                  </Avatar>
+                  <div className="grid gap-1">
+                    <p className="text-sm font-medium leading-none">
+                      {size.item_name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {size.variation_name} / {size.size_name}
+                    </p>
+                  </div>
+                  <div className="ml-auto font-medium">{size.size_quantity} Left</div>
                 </div>
-                <div className="ml-auto font-medium">+$1,999.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Jackson Lee
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    jackson.lee@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
-                  <AvatarFallback>IN</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Isabella Nguyen
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    isabella.nguyen@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$299.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                  <AvatarFallback>WK</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    William Kim
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    will@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$99.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
-                  <AvatarFallback>SD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Sofia Davis
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    sofia.davis@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
+              ))}
             </CardContent>
           </Card>
         </div>

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_LINK;
 
-export const processSale = async (name, address1, address2, zip, state, email, items) => {
+export const processSale = async (name, address1, address2, zip, state, email, items, totalPrice) => {
     try {
         await axios.post(`${API_URL}/sales`, {
             name,
@@ -12,6 +12,7 @@ export const processSale = async (name, address1, address2, zip, state, email, i
             state,
             email,
             items,
+            totalPrice,
         });
     } catch (error) {
         console.error('Error fetching users:', error);
