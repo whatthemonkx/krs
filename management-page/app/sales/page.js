@@ -200,6 +200,7 @@ export default function Dashboard() {
           </DropdownMenu>
         </div>
       </header>
+
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
@@ -260,7 +261,7 @@ export default function Dashboard() {
                       </TableHeader>
                       <TableBody>
                         {allSales.map((sale) => (
-                          <TableRow className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -304,7 +305,7 @@ export default function Dashboard() {
                       </TableHeader>
                       <TableBody>
                         {weekSales.map((sale) => (
-                          <TableRow className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -348,7 +349,7 @@ export default function Dashboard() {
                       </TableHeader>
                       <TableBody>
                         {monthSales.map((sale) => (
-                          <TableRow className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -392,7 +393,7 @@ export default function Dashboard() {
                       </TableHeader>
                       <TableBody>
                         {yearSales.map((sale) => (
-                          <TableRow className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -464,7 +465,7 @@ export default function Dashboard() {
                   <div className="font-semibold">Order Details</div>
 
                   {currentSaleInfo.items.map((item) => (
-                    <ul className="grid gap-3">
+                    <ul className="grid gap-3" key={item.id}>
                       <li className="flex items-center justify-between">
                         <span className="text-muted-foreground">
                           {item.item}: {item.size} / {item.variant} x <span>{item.quantity}</span>

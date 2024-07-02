@@ -8,6 +8,7 @@ SELECT
     i.description AS item_description,
     i.price AS item_price,
     i.itemType AS item_type,
+    i.status AS item_status,
     JSON_ARRAYAGG(
         JSON_OBJECT(
             'id', v.id,
@@ -101,6 +102,15 @@ export const getSpecificSizes = (req, res) => {
     const q = `SELECT * FROM store.sizes WHERE id IN (${placeholders});`;
 
     db.query(q, ids, (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};
+
+export const deleteItem = (req, res) => {
+    const q = "DELETE FROM `store`.`items` WHERE (`id` = ?);";
+
+    db.query(q, [req.body.id], (err, data) => {
         if (err) return res.status(500).json(err);
         return res.status(200).json(data);
     });
