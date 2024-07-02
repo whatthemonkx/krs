@@ -20,7 +20,7 @@ import { getSoldItems, getTransactions, getSoldoutSizes, getTransactionsWithItem
 import { getItems, deleteItem } from "../../api/items";
 
 
-export default function Dashboard() {
+export default function AddItem() {
   const [items, setItems] = useState([]);
   const [sales, setSales] = useState([]);
   const [sizes, setSizes] = useState([]);

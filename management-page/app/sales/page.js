@@ -2,80 +2,30 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Copy, CreditCard, File, ListFilter, MoreVertical, Truck, CircleUser, Menu } from "lucide-react";
+import { Copy, ListFilter, Truck, CircleUser, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getSoldItems, getTransactions, getSoldoutSizes, getTransactionsWithItems, fulfillOrder } from "../api/sales";
+import { getTransactionsWithItems, fulfillOrder } from "../api/sales";
 
-export default function Dashboard() {
-  const [items, setItems] = useState([]);
+export default function Sales() {
   const [sales, setSales] = useState([]);
-  const [sizes, setSizes] = useState([]);
   const [currentSale, setCurrentSale] = useState(0);
   const currentSaleInfo = sales.find(sale => sale.id === currentSale);
   const [filter, setFilter] = useState(0);
-  const [rev, setRev] = useState(0);
-  const [rev30Days, setRev30Days] = useState(0);
-  const [itemsSold, setItemsSold] = useState(0);
-  const [itemsSold30Days, setItemsSold30Days] = useState(0);
-  const totalSales = sales.filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).length;
-  const pendingOrders = sales.filter(item => item.status === "Pending").length;
   const allSales = filter === 0 ? [...sales].reverse() : filter === 1 ? [...sales].reverse().filter(item => item.status === "Pending") : [...sales].reverse().filter(item => item.status !== "Pending");
   const weekSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status !== "Pending");
   const monthSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status !== "Pending");
   const yearSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status !== "Pending");
 
   const fetchItems = async () => {
-    const items = await getSoldItems();
-    setItems(items);
-
     const sales = await getTransactionsWithItems();
     setSales(sales);
-
-    const sizes = await getSoldoutSizes();
-    setSizes(sizes);
-
-    const calculateTotalPrice = () => {
-      return sales.reduce((total, item) => {
-        return total + item.totalPrice;
-      }, 0);
-    };
-    setRev(calculateTotalPrice())
-
-    const thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
-
-    const calculateTotalPrice30Days = () => {      
-      return sales
-        .filter(item => new Date(item.time) >= thirtyDaysAgo)
-        .reduce((total, item) => {
-          return total + item.totalPrice;
-        }, 0);
-    };
-    setRev30Days(calculateTotalPrice30Days())
-
-    const calculateTotalItemsSold = () => {
-      return items.reduce((total, item) => {
-        return total + item.quantity;
-      }, 0);
-    };
-    setItemsSold(calculateTotalItemsSold())
-
-    const calculateTotalItemsSold30Days = () => {
-      return items
-        .filter(item => new Date(item.time) >= thirtyDaysAgo)
-        .reduce((total, item) => {
-          return total + item.quantity;
-        }, 0);
-    };
-    setItemsSold30Days(calculateTotalItemsSold30Days())
-
   };
   
   useEffect(() => {
@@ -98,17 +48,6 @@ export default function Dashboard() {
   
     return `${month}/${day}/${year}`;
   }
-
-  // console.log(items)
-  // console.log(sales)
-  // console.log(sizes)
-
-  // console.log(allSales)
-  // console.log(weekSales)
-  // console.log(monthSales)
-  // console.log(yearSales)
-  // console.log(currentSale)
-  console.log(currentSaleInfo)
 
   function handleFulfillOrder(orderId) {
     fulfillOrder(orderId)
@@ -444,26 +383,11 @@ export default function Dashboard() {
                       Fulfill Order
                     </span>
                   </Button>
-                  {/* <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="outline" className="h-8 w-8">
-                        <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">More</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Export</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Trash</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu> */}
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
                 <div className="grid gap-3">
                   <div className="font-semibold">Order Details</div>
-
                   {currentSaleInfo.items.map((item) => (
                     <ul className="grid gap-3" key={item.id}>
                       <li className="flex items-center justify-between">
@@ -473,22 +397,7 @@ export default function Dashboard() {
                       </li>
                     </ul>
                   ))}
-
-
-                  {/* <Separator className="my-2" /> */}
                   <ul className="grid gap-3">
-                    {/* <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Subtotal</span>
-                      <span>$299.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Shipping</span>
-                      <span>$5.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Tax</span>
-                      <span>$25.00</span>
-                    </li> */}
                     <li className="flex items-center justify-between font-semibold">
                       <span className="text-foreground">Total</span>
                       <span>${formatToDollar(currentSaleInfo.totalPrice)}</span>
@@ -506,12 +415,6 @@ export default function Dashboard() {
                       <span>{currentSaleInfo.city}, {currentSaleInfo.state} {currentSaleInfo.zip}</span>
                     </address>
                   </div>
-                  {/* <div className="grid auto-rows-max gap-3">
-                    <div className="font-semibold">Billing Information</div>
-                    <div className="text-muted-foreground">
-                      Same as shipping address
-                    </div>
-                  </div> */}
                 </div>
                 <Separator className="my-4" />
                 <div className="grid gap-3">
@@ -527,49 +430,9 @@ export default function Dashboard() {
                         <a href="mailto:">{currentSaleInfo.email}</a>
                       </dd>
                     </div>
-                    {/* <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Phone</dt>
-                      <dd>
-                        <a href="tel:">+1 234 567 890</a>
-                      </dd>
-                    </div> */}
                   </dl>
                 </div>
-                {/* <Separator className="my-4" />
-                <div className="grid gap-3">
-                  <div className="font-semibold">Payment Information</div>
-                  <dl className="grid gap-3">
-                    <div className="flex items-center justify-between">
-                      <dt className="flex items-center gap-1 text-muted-foreground">
-                        <CreditCard className="h-4 w-4" />
-                        Visa
-                      </dt>
-                      <dd>**** **** **** 4532</dd>
-                    </div>
-                  </dl>
-                </div> */}
               </CardContent>
-              {/* <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime="2023-11-23">November 23, 2023</time>
-                </div>
-                <Pagination className="ml-auto mr-0 w-auto">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Previous Order</span>
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Next Order</span>
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </CardFooter> */}
             </Card>}
           </div>
         </main>

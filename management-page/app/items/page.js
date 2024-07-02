@@ -1,139 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { File, Home, LineChart, ListFilter, MoreHorizontal, Package, Package2, PanelLeft, PlusCircle, Search, Settings, ShoppingCart, Users2, ChevronLeft, ChevronRight, Copy, CreditCard, MoreVertical, Truck, CircleUser, Menu } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { CircleUser, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
-import { Separator } from "@/components/ui/separator";
-import { useEffect, useState } from "react";
-import { getSoldItems, getTransactions, getSoldoutSizes, getTransactionsWithItems, fulfillOrder } from "../api/sales";
-import { getItems, deleteItem } from "../api/items";
+import { useState } from "react";
 import Variations from "@/components/Variations";
 import Items from "@/components/Items";
 
 
-export default function Dashboard() {
-  const [items, setItems] = useState([]);
-  const [sales, setSales] = useState([]);
-  const [sizes, setSizes] = useState([]);
-  const [currentSale, setCurrentSale] = useState(0);
-  const currentSaleInfo = sales.find(sale => sale.id === currentSale);
-  const [filter, setFilter] = useState(0);
-  const [rev, setRev] = useState(0);
-  const [rev30Days, setRev30Days] = useState(0);
-  const [itemsSold, setItemsSold] = useState(0);
-  const [itemsSold30Days, setItemsSold30Days] = useState(0);
-  const totalSales = sales.filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).length;
-  const pendingOrders = sales.filter(item => item.status === "Pending").length;
-
+export default function Products() {
   const [pickedItem, setPickedItem] = useState(0);
-
-
-
-
-  const activeItems = [...items].filter(item => item.item_status === "Active")
-  const draftItems = [...items].filter(item => item.item_status === "Draft")  
-  const archivedItems = [...items].filter(item => item.item_status === "Archived") 
-
-  const fetchItems = async () => {
-    const items = await getSoldItems();
-    const items2 = await getItems();
-    setItems(items2);
-
-    const sales = await getTransactionsWithItems();
-    setSales(sales);
-
-    const sizes = await getSoldoutSizes();
-    setSizes(sizes);
-
-    const calculateTotalPrice = () => {
-      return sales.reduce((total, item) => {
-        return total + item.totalPrice;
-      }, 0);
-    };
-    setRev(calculateTotalPrice())
-
-    const thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
-
-    const calculateTotalPrice30Days = () => {      
-      return sales
-        .filter(item => new Date(item.time) >= thirtyDaysAgo)
-        .reduce((total, item) => {
-          return total + item.totalPrice;
-        }, 0);
-    };
-    setRev30Days(calculateTotalPrice30Days())
-
-    const calculateTotalItemsSold = () => {
-      return items.reduce((total, item) => {
-        return total + item.quantity;
-      }, 0);
-    };
-    setItemsSold(calculateTotalItemsSold())
-
-    const calculateTotalItemsSold30Days = () => {
-      return items
-        .filter(item => new Date(item.time) >= thirtyDaysAgo)
-        .reduce((total, item) => {
-          return total + item.quantity;
-        }, 0);
-    };
-    setItemsSold30Days(calculateTotalItemsSold30Days())
-
-  };
-  
-  useEffect(() => {
-    fetchItems()
-  }, []);
-
-  function formatToDollar(amount) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
-  }
-
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-  
-    return `${month}/${day}/${year}`;
-  }
-
-  // console.log(items)
-  // console.log(pickedItem)
-  // console.log(sales)
-  // console.log(sizes)
-
-  // console.log(allSales)
-  // console.log(weekSales)
-  // console.log(monthSales)
-  // console.log(yearSales)
-  // console.log(currentSale)
-  // console.log(currentSaleInfo)
-
-  function handleFulfillOrder(orderId) {
-    fulfillOrder(orderId)
-    fetchItems()
-  } 
-
-  function handleDeleteItem(itemId) {
-    deleteItem(itemId)
-    fetchItems()
-  } 
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
