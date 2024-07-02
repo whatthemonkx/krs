@@ -1,0 +1,538 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { File, Home, LineChart, ListFilter, MoreHorizontal, Package, Package2, PanelLeft, PlusCircle, Search, Settings, ShoppingCart, Users2, ChevronLeft, ChevronRight, Copy, CreditCard, MoreVertical, Truck, CircleUser, Menu } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
+import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import { getSoldItems, getTransactions, getSoldoutSizes, getTransactionsWithItems, fulfillOrder } from "../app/api/sales";
+import { getItems, deleteVariation } from "../app/api/items";
+
+
+export default function Variations({pickedItem}) {
+  const [items, setItems] = useState({ variations: [] });
+  const [sales, setSales] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [currentSale, setCurrentSale] = useState(0);
+  const currentSaleInfo = sales.find(sale => sale.id === currentSale);
+  const [filter, setFilter] = useState(0);
+  const [rev, setRev] = useState(0);
+  const [rev30Days, setRev30Days] = useState(0);
+  const [itemsSold, setItemsSold] = useState(0);
+  const [itemsSold30Days, setItemsSold30Days] = useState(0);
+  const totalSales = sales.filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).length;
+  const pendingOrders = sales.filter(item => item.status === "Pending").length;
+
+
+
+
+  const activeItems = items.variations.filter(item => item.status === "Active")
+  const draftItems = items.variations.filter(item => item.status === "Draft")  
+  const archivedItems = items.variations.filter(item => item.status === "Archived") 
+
+    const fetchItems = async () => {
+        const soldItems = await getSoldItems();
+        const allItems = await getItems();
+        setItems(allItems.find(item => item.item_id === pickedItem) || { variations: [] });  // Ensure items has a default value
+
+        const sales = await getTransactionsWithItems();
+        setSales(sales);
+
+        const sizes = await getSoldoutSizes();
+        setSizes(sizes);
+
+        const calculateTotalPrice = () => {
+            return sales.reduce((total, item) => {
+                return total + item.totalPrice;
+            }, 0);
+        };
+        setRev(calculateTotalPrice())
+
+        const thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
+
+        const calculateTotalPrice30Days = () => {      
+            return sales
+                .filter(item => new Date(item.time) >= thirtyDaysAgo)
+                .reduce((total, item) => {
+                    return total + item.totalPrice;
+                }, 0);
+        };
+        setRev30Days(calculateTotalPrice30Days())
+
+        const calculateTotalItemsSold = () => {
+            return allItems.reduce((total, item) => {
+                return total + item.quantity;
+            }, 0);
+        };
+        setItemsSold(calculateTotalItemsSold())
+
+        const calculateTotalItemsSold30Days = () => {
+            return allItems
+                .filter(item => new Date(item.time) >= thirtyDaysAgo)
+                .reduce((total, item) => {
+                    return total + item.quantity;
+                }, 0);
+        };
+        setItemsSold30Days(calculateTotalItemsSold30Days())
+    };
+
+  
+  useEffect(() => {
+    fetchItems()
+  }, []);
+
+  function formatToDollar(amount) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+  
+    return `${month}/${day}/${year}`;
+  }
+
+//   console.log(activeItems)
+//   console.log(draftItems)
+//   console.log(archivedItems[0]?.id)
+
+  // console.log(allSales)
+  // console.log(weekSales)
+  // console.log(monthSales)
+  // console.log(yearSales)
+  // console.log(currentSale)
+  // console.log(currentSaleInfo)
+
+  function handleFulfillOrder(orderId) {
+    fulfillOrder(orderId)
+    fetchItems()
+  } 
+
+  function handleDeleteVariation(itemId) {
+    deleteVariation(itemId)
+    fetchItems()
+  } 
+
+  return (
+    <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <Tabs defaultValue="all">
+        <div className="flex items-center">
+            <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="draft">Draft</TabsTrigger>
+            <TabsTrigger value="archived" className="hidden sm:flex">
+                Archived
+            </TabsTrigger>
+            </TabsList>
+            <div className="ml-auto flex items-center gap-2">
+            {/* <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-7 gap-1">
+                    <ListFilter className="h-3.5 w-3.5" />
+                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Filter
+                    </span>
+                </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem checked>
+                    All
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>
+                    Sold Out
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>
+                    Archived
+                </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+            </DropdownMenu> */}
+            {/* <Button size="sm" variant="outline" className="h-7 gap-1">
+                <File className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Export
+                </span>
+            </Button> */}
+                            <a href="/items/add"><Button size="sm" className="h-7 gap-1">
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add Variation
+                </span>
+            </Button></a>
+            </div>
+        </div>
+
+        <TabsContent value="all">
+            <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader>
+                <CardTitle>All Variations</CardTitle>
+                {/* <CardDescription>
+                Manage your products and view their sales performance.
+                </CardDescription> */}
+            </CardHeader>
+            <CardContent>
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="hidden w-[100px] sm:table-cell">
+                        <span className="sr-only">Image</span>
+                    </TableHead>
+                    <TableHead className="text-center">Name</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    {/* <TableHead>Price</TableHead> */}
+                    {/* <TableHead className="hidden md:table-cell">
+                        Stock
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                        Total Sales
+                    </TableHead> */}
+                    <TableHead>
+                        <span className="sr-only">Actions</span>
+                    </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {items?.variations[0]?.id !== null ? (
+                        items.variations.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell className="hidden sm:table-cell">
+                                    <img
+                                        className="aspect-square rounded-md object-cover"
+                                        height="100"
+                                        width="100"
+                                        // src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`}
+                                        src={
+                                            item.images &&
+                                            item.images[0] &&
+                                            item.images[0].name
+                                            ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                            : 'http://via.placeholder.com/100x100'
+                                        }
+                                    />
+                                </TableCell>
+                                <TableCell className="font-medium text-center">
+                                    {item.name}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Badge variant="outline">{item.status}</Badge>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                aria-haspopup="true"
+                                                size="icon"
+                                                variant="ghost"
+                                            >
+                                                <MoreHorizontal className="h-4 w-4" />
+                                                <span className="sr-only">Toggle menu</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <a href={`/items/${item.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                            <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center">No variations available</TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+
+                </Table>
+            </CardContent>
+            </Card>
+        </TabsContent>
+
+        <TabsContent value="active">
+            <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader>
+                <CardTitle>Active Variations</CardTitle>
+                {/* <CardDescription>
+                Manage your products and view their sales performance.
+                </CardDescription> */}
+            </CardHeader>
+            <CardContent>
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="hidden w-[100px] sm:table-cell">
+                        <span className="sr-only">Image</span>
+                    </TableHead>
+                    <TableHead className="text-center">Name</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    {/* <TableHead>Price</TableHead> */}
+                    {/* <TableHead className="hidden md:table-cell">
+                        Stock
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                        Total Sales
+                    </TableHead> */}
+                    <TableHead>
+                        <span className="sr-only">Actions</span>
+                    </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {activeItems[0]?.id !== null ? (
+                        activeItems.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell className="hidden sm:table-cell">
+                                    <img
+                                        className="aspect-square rounded-md object-cover"
+                                        height="100"
+                                        width="100"
+                                        // src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`}
+                                        src={
+                                            item.images &&
+                                            item.images[0] &&
+                                            item.images[0].name
+                                            ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                            : 'http://via.placeholder.com/100x100'
+                                        }
+                                    />
+                                </TableCell>
+                                <TableCell className="font-medium text-center">
+                                    {item.name}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Badge variant="outline">{item.status}</Badge>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                aria-haspopup="true"
+                                                size="icon"
+                                                variant="ghost"
+                                            >
+                                                <MoreHorizontal className="h-4 w-4" />
+                                                <span className="sr-only">Toggle menu</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <a href={`/items/${item.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                            <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center">No variations available</TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+
+                </Table>
+            </CardContent>
+            </Card>
+        </TabsContent>
+
+        <TabsContent value="draft">
+            <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader>
+                <CardTitle>Draft Variations</CardTitle>
+                {/* <CardDescription>
+                Manage your products and view their sales performance.
+                </CardDescription> */}
+            </CardHeader>
+            <CardContent>
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="hidden w-[100px] sm:table-cell">
+                        <span className="sr-only">Image</span>
+                    </TableHead>
+                    <TableHead className="text-center">Name</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    {/* <TableHead>Price</TableHead> */}
+                    {/* <TableHead className="hidden md:table-cell">
+                        Stock
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                        Total Sales
+                    </TableHead> */}
+                    <TableHead>
+                        <span className="sr-only">Actions</span>
+                    </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {draftItems[0]?.id !== null ? (
+                        draftItems.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell className="hidden sm:table-cell">
+                                    <img
+                                        className="aspect-square rounded-md object-cover"
+                                        height="100"
+                                        width="100"
+                                        // src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`}
+                                        src={
+                                            item.images &&
+                                            item.images[0] &&
+                                            item.images[0].name
+                                            ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                            : 'http://via.placeholder.com/100x100'
+                                        }
+                                    />
+                                </TableCell>
+                                <TableCell className="font-medium text-center">
+                                    {item.name}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Badge variant="outline">{item.status}</Badge>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                aria-haspopup="true"
+                                                size="icon"
+                                                variant="ghost"
+                                            >
+                                                <MoreHorizontal className="h-4 w-4" />
+                                                <span className="sr-only">Toggle menu</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <a href={`/items/${item.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                            <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center">No variations available</TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+
+                </Table>
+            </CardContent>
+            </Card>
+        </TabsContent>
+
+        <TabsContent value="archived">
+            <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader>
+                <CardTitle>Archived Variations</CardTitle>
+                {/* <CardDescription>
+                Manage your products and view their sales performance.
+                </CardDescription> */}
+            </CardHeader>
+            <CardContent>
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead className="hidden w-[100px] sm:table-cell">
+                        <span className="sr-only">Image</span>
+                    </TableHead>
+                    <TableHead className="text-center">Name</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    {/* <TableHead>Price</TableHead> */}
+                    {/* <TableHead className="hidden md:table-cell">
+                        Stock
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                        Total Sales
+                    </TableHead> */}
+                    <TableHead>
+                        <span className="sr-only">Actions</span>
+                    </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {archivedItems[0]?.id !== null  ? (
+                        archivedItems.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell className="hidden sm:table-cell">
+                                    <img
+                                        className="aspect-square rounded-md object-cover"
+                                        height="100"
+                                        width="100"
+                                        // src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`}
+                                        src={
+                                            item.images &&
+                                            item.images[0] &&
+                                            item.images[0].name
+                                            ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                            : 'http://via.placeholder.com/100x100'
+                                        }
+                                    />
+                                </TableCell>
+                                <TableCell className="font-medium text-center">
+                                    {item.name}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Badge variant="outline">{item.status}</Badge>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                aria-haspopup="true"
+                                                size="icon"
+                                                variant="ghost"
+                                            >
+                                                <MoreHorizontal className="h-4 w-4" />
+                                                <span className="sr-only">Toggle menu</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                            <a href={`/items/${item.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                            <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center">No variations available</TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+
+                </Table>
+            </CardContent>
+            </Card>
+        </TabsContent>
+
+        </Tabs>
+    </main>
+    </div>
+  )
+}

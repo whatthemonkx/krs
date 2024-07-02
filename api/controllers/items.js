@@ -13,6 +13,7 @@ SELECT
         JSON_OBJECT(
             'id', v.id,
             'name', v.name,
+            'status', v.status,
             'sizes', (
                 SELECT JSON_ARRAYAGG(
                     JSON_OBJECT(
@@ -109,6 +110,15 @@ export const getSpecificSizes = (req, res) => {
 
 export const deleteItem = (req, res) => {
     const q = "DELETE FROM `store`.`items` WHERE (`id` = ?);";
+
+    db.query(q, [req.body.id], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};
+
+export const deleteVariation = (req, res) => {
+    const q = "DELETE FROM `store`.`variations` WHERE (`id` = ?);";
 
     db.query(q, [req.body.id], (err, data) => {
         if (err) return res.status(500).json(err);

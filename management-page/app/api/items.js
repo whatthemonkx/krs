@@ -41,3 +41,14 @@ export const deleteItem = async (ids) => {
         console.error('Error fetching users:', error);
     }
 };
+
+export const deleteVariation = async (ids) => {
+    try {
+        const response = await axios.post(`${API_URL}/items/deleteVariation`, {
+            id: ids
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
