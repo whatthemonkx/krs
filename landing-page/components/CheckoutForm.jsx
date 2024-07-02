@@ -116,6 +116,7 @@ export default function CheckoutForm() {
         address.name,
         address.address.line1,
         address.address.line2,
+        address.address.city,
         address.address.postal_code,
         address.address.state,
         address.email,

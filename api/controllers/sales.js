@@ -1,9 +1,9 @@
 import { db } from "../db.js";
 
 export const inputSale = (req, res) => {
-    const transactionQuery = "INSERT INTO `store`.`transaction` (`name`, `address1`, `address2`, `zip`, `state`, `email`, `totalPrice`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const transactionQuery = "INSERT INTO `store`.`transaction` (`name`, `address1`, `address2`, `city`, `zip`, `state`, `email`, `totalPrice`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    db.query(transactionQuery, [ req.body.name, req.body.address1, req.body.address2, req.body.zip, req.body.state, req.body.email, req.body.totalPrice], (err, result) => {
+    db.query(transactionQuery, [ req.body.name, req.body.address1, req.body.address2, req.body.city, req.body.zip, req.body.state, req.body.email, req.body.totalPrice], (err, result) => {
         if (err) return res.status(500).json(err);
 
         const transactionId = result.insertId;
@@ -91,5 +91,54 @@ export const getSoldOutSizes = (req, res) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
     });
-  };
-  
+};
+
+export const getCompleteSaleInfo = (req, res) => {
+    const q = `
+SELECT 
+    t.id AS id,
+    t.name AS name,
+    t.address1 AS address1,
+    t.address2 AS address2,
+    t.city AS city,
+    t.zip AS zip,
+    t.state AS state,
+    t.email AS email,
+    t.totalPrice AS totalPrice,
+    t.status AS status,
+    t.time AS time,
+    JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'id', s.id,
+            'item', i.name,
+            'size', x.name,
+            'variant', v.name,
+            'quantity', s.quantity
+        )
+    ) AS items
+FROM transaction t
+LEFT JOIN solditems s ON s.transaction = t.id
+LEFT JOIN sizes x ON s.sizeid = x.id
+LEFT JOIN variations v ON x.variation = v.id
+LEFT JOIN items i ON v.item = i.id
+GROUP BY t.id;
+    `;
+    db.query(q, [], (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database query failed', details: err });
+        }
+        if (data.length === 0) {
+            return res.status(404).json({ message: 'No transactions found' });
+        }
+        return res.status(200).json(data);
+    });
+};
+
+export const changeTranactionStatus = (req, res) => {
+    const q = "UPDATE `store`.`transaction` SET `status` = 'Fulfilled' WHERE (`id` = ?);";
+
+    db.query(q, [req.body.id], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};

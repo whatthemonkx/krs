@@ -1,12 +1,10 @@
 "use client";
 
-import { Truck, ArrowUpRight, CircleUser, Shirt , DollarSign, Menu, Package2, Search, ShoppingBag ,} from "lucide-react";
+import { Truck, ArrowUpRight, CircleUser, Shirt , DollarSign, Menu, ShoppingBag ,} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import Link from 'next/link';
@@ -92,14 +90,13 @@ function Dashboard() {
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+      <header className="sticky z-[1000] top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <Link
             href="#"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
-            <Package2 className="h-6 w-6" />
-            <span className="sr-only">Acme Inc</span>
+            <div className='title w-[150px]'>KoNGA-71</div>
           </Link>
           <Link
             href="/"
@@ -137,8 +134,7 @@ function Dashboard() {
                 href="#"
                 className="flex items-center gap-2 text-lg font-semibold"
               >
-                <Package2 className="h-6 w-6" />
-                <span className="sr-only">Acme Inc</span>
+                <div className='title w-[150px]'>KoNGA-71</div>
               </Link>
               <Link href="/" className="hover:text-foreground">
                 Dashboard

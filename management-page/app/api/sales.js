@@ -37,9 +37,29 @@ export const getTransactions = async () => {
     }
 };
 
+export const getTransactionsWithItems = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/sales/transactionsanditems`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
+
 export const getSoldoutSizes = async () => {
     try {
         const response = await axios.get(`${API_URL}/sales/soldout`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
+
+export const fulfillOrder = async (ids) => {
+    try {
+        const response = await axios.post(`${API_URL}/sales/fulfillOrder`, {
+            id: ids
+        });
         return response.data;
     } catch (error) {
         console.error('Error fetching users:', error);
