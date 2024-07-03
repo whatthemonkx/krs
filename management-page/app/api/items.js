@@ -52,3 +52,34 @@ export const deleteVariation = async (ids) => {
         console.error('Error fetching users:', error);
     }
 };
+
+export const addItem = async (name, description, price, itemType, status) => {
+    try {
+        const response = await axios.post(`${API_URL}/items/addItem`, {
+            name: name,
+            description: description,
+            price: price,
+            itemType: itemType,
+            status: status,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
+
+export const editItem = async (name, description, price, itemType, status, id) => {
+    try {
+        const response = await axios.post(`${API_URL}/items/editItem`, {
+            name: name,
+            description: description,
+            price: price,
+            itemType: itemType,
+            status: status,
+            id: id
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};

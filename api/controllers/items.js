@@ -126,3 +126,20 @@ export const deleteVariation = (req, res) => {
     });
 };
 
+export const addItem = (req, res) => {
+    const q = "INSERT INTO `store`.`items` (`name`, `description`, `price`, `itemType`, `status`) VALUES (?, ?, ?, ?, ?);";
+
+    db.query(q, [req.body.name, req.body.description, req.body.price, req.body.itemType, req.body.status], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};
+
+export const editItem = (req, res) => {
+    const q = "UPDATE `store`.`items` SET `name` = ?, `description` = ?, `price` = ?, `itemType` = ?, `status` = ? WHERE (`id` = ?);";
+
+    db.query(q, [req.body.name, req.body.description, req.body.price, req.body.itemType, req.body.status, req.body.id], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};

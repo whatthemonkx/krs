@@ -8,10 +8,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import Variations from "@/components/Variations";
 import Items from "@/components/Items";
+import { AddItem } from "@/components/AddItem";
 
 
 export default function Products() {
   const [pickedItem, setPickedItem] = useState(0);
+  const [editing, setEditing] = useState(0);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -99,8 +101,10 @@ export default function Products() {
         </div>
       </header>
 
-      {!pickedItem && <Items setPickedItem={setPickedItem}/>}
-      {pickedItem !== 0 && <Variations pickedItem={pickedItem}/>}
+      {editing === 0 && !pickedItem && <Items setPickedItem={setPickedItem} setEditing={setEditing}/>}
+      {editing === 0 && pickedItem !== 0 && <Variations pickedItem={pickedItem}/>}
+      {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>}
+      {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>}
     </div>
   )
 }

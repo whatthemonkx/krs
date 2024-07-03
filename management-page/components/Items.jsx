@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { getItems, deleteItem } from "../app/api/items";
 
-export default function Items({setPickedItem}) {
+export default function Items({setPickedItem, setEditing}) {
     const [items, setItems] = useState([]);
     const activeItems = [...items].filter(item => item.item_status === "Active")
     const draftItems = [...items].filter(item => item.item_status === "Draft")  
@@ -52,14 +52,12 @@ export default function Items({setPickedItem}) {
                 </TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
-                    <a href="/items/add">
-                        <Button size="sm" className="h-7 gap-1">
-                            <PlusCircle className="h-3.5 w-3.5" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                            Add Product
-                            </span>
-                        </Button>
-                    </a>
+                    <Button size="sm" className="h-7 gap-1"  onClick={(e) => setEditing(1)}>
+                        <PlusCircle className="h-3.5 w-3.5" />
+                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                        Add Product
+                        </span>
+                    </Button>
                 </div>
             </div>
             <TabsContent value="all">
@@ -76,7 +74,7 @@ export default function Items({setPickedItem}) {
                         </TableHead>
                         <TableHead className="text-center">Name</TableHead>
                         <TableHead className="text-center">Status</TableHead>
-                        <TableHead className="text-center">Price</TableHead>
+                        <TableHead  className="hidden sm:table-cell text-center">Price</TableHead>
                         <TableHead className="text-right">
                             <span className="sr-only">Actions</span>
                         </TableHead>
@@ -107,7 +105,7 @@ export default function Items({setPickedItem}) {
                                 <TableCell className="text-center">
                                 <Badge variant="outline">{item.item_status}</Badge>
                                 </TableCell>
-                                <TableCell className="text-center">${formatToDollar(item.item_price)}</TableCell>
+                                <TableCell className="hidden sm:table-cell text-center">${formatToDollar(item.item_price)}</TableCell>
                                 <TableCell className="text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -122,7 +120,8 @@ export default function Items({setPickedItem}) {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem onClick={(e) => setPickedItem(item.item_id)}>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => {setPickedItem(item.item_id); setEditing(2)}}>Edit item info</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => setPickedItem(item.item_id)}>Go to variations</DropdownMenuItem>
                                     <DropdownMenuItem onClick={(e) => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
@@ -146,9 +145,9 @@ export default function Items({setPickedItem}) {
                         <TableHead className="hidden w-[100px] sm:table-cell">
                             <span className="sr-only">Image</span>
                         </TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Price</TableHead>
+                        <TableHead className="text-center">Name</TableHead>
+                        <TableHead className="text-center">Status</TableHead>
+                        <TableHead className="hidden sm:table-cell text-center">Price</TableHead>
                         <TableHead>
                             <span className="sr-only">Actions</span>
                         </TableHead>
@@ -173,14 +172,14 @@ export default function Items({setPickedItem}) {
                                 }
                                 />
                                 </TableCell>
-                                <TableCell className="font-medium">
+                                <TableCell className="font-medium text-center">
                                 {item.item_name}
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="text-center">
                                 <Badge variant="outline">{item.item_status}</Badge>
                                 </TableCell>
-                                <TableCell>${formatToDollar(item.item_price)}</TableCell>
-                                <TableCell>
+                                <TableCell className="hidden sm:table-cell text-center">${formatToDollar(item.item_price)}</TableCell>
+                                <TableCell className="text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                     <Button
@@ -218,9 +217,9 @@ export default function Items({setPickedItem}) {
                         <TableHead className="hidden w-[100px] sm:table-cell">
                             <span className="sr-only">Image</span>
                         </TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Price</TableHead>
+                        <TableHead className="text-center">Name</TableHead>
+                        <TableHead className="text-center">Status</TableHead>
+                        <TableHead className="hidden sm:table-cell text-center">Price</TableHead>
                         <TableHead>
                             <span className="sr-only">Actions</span>
                         </TableHead>
@@ -245,14 +244,14 @@ export default function Items({setPickedItem}) {
                                 }
                                 />
                                 </TableCell>
-                                <TableCell className="font-medium">
+                                <TableCell className="font-medium text-center">
                                 {item.item_name}
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="text-center">
                                 <Badge variant="outline">{item.item_status}</Badge>
                                 </TableCell>
-                                <TableCell>${formatToDollar(item.item_price)}</TableCell>
-                                <TableCell>
+                                <TableCell className="hidden sm:table-cell text-center">${formatToDollar(item.item_price)}</TableCell>
+                                <TableCell className="text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                     <Button
@@ -290,9 +289,9 @@ export default function Items({setPickedItem}) {
                         <TableHead className="hidden w-[100px] sm:table-cell">
                             <span className="sr-only">Image</span>
                         </TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Price</TableHead>
+                        <TableHead className="text-center">Name</TableHead>
+                        <TableHead className="text-center">Status</TableHead>
+                        <TableHead className="hidden sm:table-cell text-center">Price</TableHead>
                         <TableHead>
                             <span className="sr-only">Actions</span>
                         </TableHead>
@@ -317,14 +316,14 @@ export default function Items({setPickedItem}) {
                                 }
                                 />
                                 </TableCell>
-                                <TableCell className="font-medium">
+                                <TableCell className="font-medium text-center">
                                 {item.item_name}
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="text-center">
                                 <Badge variant="outline">{item.item_status}</Badge>
                                 </TableCell>
-                                <TableCell>${formatToDollar(item.item_price)}</TableCell>
-                                <TableCell>
+                                <TableCell className="hidden sm:table-cell text-center">${formatToDollar(item.item_price)}</TableCell>
+                                <TableCell className="text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                     <Button

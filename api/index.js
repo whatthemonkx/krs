@@ -1,6 +1,7 @@
 import express from "express";
 import itemRoutes from "./routes/items.js"
 import salesRoutes from "./routes/sales.js"
+import catagoriesRoutes from "./routes/categories.js"
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -12,6 +13,7 @@ app.use(express.json())
 
 app.use("/items", itemRoutes)
 app.use("/sales", salesRoutes)
+app.use("/catagories", catagoriesRoutes)
 
 const PORT = process.env.PORT || 5000;
 
