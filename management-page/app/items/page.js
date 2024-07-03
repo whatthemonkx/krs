@@ -13,8 +13,12 @@ import { AddVariation } from "@/components/AddVariation";
 
 
 export default function Products() {
-  const [pickedItem, setPickedItem] = useState(1);
+  const [pickedItem, setPickedItem] = useState(0);
+  const [pickedVariant, setPickedVariant] = useState(0);
   const [editing, setEditing] = useState(0);
+
+  console.log(pickedItem)
+  console.log(pickedVariant)
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -102,12 +106,12 @@ export default function Products() {
         </div>
       </header>
 
-      {/* {editing === 0 && !pickedItem && <Items setPickedItem={setPickedItem} setEditing={setEditing}/>} */}
-      {/* {editing === 0 && pickedItem !== 0 && <Variations setPickedItem={setPickedItem} pickedItem={pickedItem}/>} */}
-      {/* {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>} */}
-      {/* {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>} */}
-      <AddVariation type={"New"} pickedItem={pickedItem}/>
-      <AddVariation type={"Old"} pickedItem={pickedItem}/>
+      {editing === 0 && !pickedItem && <Items setPickedItem={setPickedItem} setEditing={setEditing}/>}
+      {editing === 0 && pickedItem !== 0 && pickedVariant === 0 && <Variations setPickedItem={setPickedItem} pickedItem={pickedItem} setPickedVariant={setPickedVariant}/>}
+      {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>}
+      {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>}
+      {pickedVariant === -1 && <AddVariation type={"New"} pickedItem={pickedItem} setPickedVariant={setPickedVariant}/>}
+      {pickedVariant > 0 && <AddVariation type={"Old"} pickedItem={pickedItem} setPickedVariant={setPickedVariant}/>}
     </div>
   )
 }

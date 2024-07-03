@@ -76,7 +76,7 @@ import { getCategories, addCategory } from "../app/api/categories";
 import { useEffect, useState } from "react";
 import { Description } from "@radix-ui/react-dialog"
 
-export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
+export function AddVariation({type, pickedItem, setPickedVariant}) {
     const [variation, setVariation] = useState(null);
     const [cats, setCats] = useState(null);
     const [name, setName] = useState("");
@@ -92,6 +92,7 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
     const fetchItems = async () => {
         const variation = await getItems();
         setVariation(variation.find(item => item.item_id === pickedItem).variations.find(item => item.id === pickedItem));
+        // setVariation(variation);
 
         // if (pickedItem) {
         //     setDescription(items.find(item => item.item_id === pickedItem).item_description)
@@ -132,8 +133,8 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
     //     }
     // }
 
-    console.log(sizeName)
-    console.log(sizeQuantity)
+    // console.log(sizeName)
+    console.log(typeof(pickedItem))
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -141,18 +142,18 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
             <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
                 <div className="flex items-center gap-4">
-                <Button variant="outline" size="icon" className="h-7 w-7" onClick={(e) => {setPickedItem(0); setEditing(0)}}>
+                <Button variant="outline" size="icon" className="h-7 w-7" onClick={(e) => setPickedVariant(0)}>
                     <ChevronLeft className="h-4 w-4" />
                     <span className="sr-only">Back</span>
                 </Button>
                 <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                    {type === "New" ? "Add New Item": "Edit Existing Item"}
+                    {type === "New" ? "Add New Variation": "Edit Existing Variation"}
                 </h1>
                 {/* <Badge variant="outline" className="ml-auto sm:ml-0">
                     In stock
                 </Badge> */}
                 <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                    <Button variant="outline" size="sm" onClick={(e) => {setPickedItem(0); setEditing(0)}}>
+                    <Button variant="outline" size="sm" onClick={(e) => setPickedVariant(0)}>
                     Cancel
                     </Button>
                     <Button size="sm" onClick={(e) => handleEditAddItem()}>Save Variation</Button>
@@ -203,7 +204,7 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
                         </div>
                     </CardContent>
                     </Card>
-                    <Card x-chunk="dashboard-07-chunk-1">
+                    {type === "Old" && <Card x-chunk="dashboard-07-chunk-1">
                     <CardHeader>
                         <CardTitle>Stock</CardTitle>
                         {/* <CardDescription>
@@ -290,7 +291,7 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
                         Add Variant
                         </Button>
                     </CardFooter>
-                    </Card>
+                    </Card>}
                     {/* <Card x-chunk="dashboard-07-chunk-2">
                     <CardHeader>
                         <CardTitle>Product Category</CardTitle>
@@ -463,7 +464,7 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
                 </div>
                 </div>
                 <div className="flex items-center justify-center gap-2 md:hidden">
-                <Button variant="outline" size="sm" onClick={(e) => {setPickedItem(0); setEditing(0)}}>
+                <Button variant="outline" size="sm" onClick={(e) => setPickedVariant(0)}>
                     Cancel
                 </Button>
                 <Button size="sm" onClick={(e) => handleEditAddItem()}>Save Variation</Button>
