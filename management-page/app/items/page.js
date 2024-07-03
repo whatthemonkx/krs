@@ -9,6 +9,7 @@ import { useState } from "react";
 import Variations from "@/components/Variations";
 import Items from "@/components/Items";
 import { AddItem } from "@/components/AddItem";
+import { AddVariation } from "@/components/AddVariation";
 
 
 export default function Products() {
@@ -101,10 +102,12 @@ export default function Products() {
         </div>
       </header>
 
-      {editing === 0 && !pickedItem && <Items setPickedItem={setPickedItem} setEditing={setEditing}/>}
-      {editing === 0 && pickedItem !== 0 && <Variations pickedItem={pickedItem}/>}
-      {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>}
-      {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>}
+      {/* {editing === 0 && !pickedItem && <Items setPickedItem={setPickedItem} setEditing={setEditing}/>} */}
+      {/* {editing === 0 && pickedItem !== 0 && <Variations setPickedItem={setPickedItem} pickedItem={pickedItem}/>} */}
+      {/* {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>} */}
+      {/* {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>} */}
+      <AddVariation type={"New"}/>
+      <AddVariation type={"Old"}/>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle, ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getItems, deleteVariation } from "../app/api/items";
 
 
-export default function Variations({pickedItem}) {
+export default function Variations({pickedItem, setPickedItem}) {
     const [items, setItems] = useState({ variations: [] });
     const activeItems = items.variations.filter(item => item.status === "Active")
     const draftItems = items.variations.filter(item => item.status === "Draft")  
@@ -37,13 +37,17 @@ export default function Variations({pickedItem}) {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
             <div className="flex items-center">
+                <Button variant="outline" size="icon" className="h-7 w-7 mr-5" onClick={(e) => setPickedItem(0)}>
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Back</span>
+                </Button>
                 <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="draft">Draft</TabsTrigger>
-                <TabsTrigger value="archived" className="hidden sm:flex">
-                    Archived
-                </TabsTrigger>
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="active">Active</TabsTrigger>
+                    <TabsTrigger value="draft">Draft</TabsTrigger>
+                    <TabsTrigger value="archived" className="hidden sm:flex">
+                        Archived
+                    </TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
                     <a href="/items/add">
