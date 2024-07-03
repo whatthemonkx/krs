@@ -77,7 +77,7 @@ import { useEffect, useState } from "react";
 import { Description } from "@radix-ui/react-dialog"
 
 export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
-    const [items, setItems] = useState(null);
+    const [variation, setVariation] = useState(null);
     const [cats, setCats] = useState(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -85,51 +85,55 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
     const [status, setStatus] = useState(""); 
     const [category, setCategory] = useState(""); 
     const [newCategory, setNewCategory] = useState(""); 
+    const [editingSize, setEditingSize] = useState(0); 
+    const [sizeName, setSizeName] = useState("");
+    const [sizeQuantity, setSizeQuantity] = useState(0);
 
     const fetchItems = async () => {
-        const items = await getItems();
-        setItems(items.find(item => item.item_id === pickedItem));
+        const variation = await getItems();
+        setVariation(variation.find(item => item.item_id === pickedItem).variations.find(item => item.id === pickedItem));
 
-        if (pickedItem) {
-            setDescription(items.find(item => item.item_id === pickedItem).item_description)
-            setName(items.find(item => item.item_id === pickedItem).item_name)
-            setNumber(items.find(item => item.item_id === pickedItem).item_price)
-            setStatus(items.find(item => item.item_id === pickedItem).item_status)
-            setCategory(items.find(item => item.item_id === pickedItem).item_type)
-        }
+        // if (pickedItem) {
+        //     setDescription(items.find(item => item.item_id === pickedItem).item_description)
+        //     setName(items.find(item => item.item_id === pickedItem).item_name)
+        //     setNumber(items.find(item => item.item_id === pickedItem).item_price)
+        //     setStatus(items.find(item => item.item_id === pickedItem).item_status)
+        //     setCategory(items.find(item => item.item_id === pickedItem).item_type)
+        // }
     };
 
-    const fetchCats = async () => {
-        const cats = await getCategories();
-        setCats(cats);
-    };
+    // const fetchCats = async () => {
+    //     const cats = await getCategories();
+    //     setCats(cats);
+    // };
 
     useEffect(() => {
         fetchItems()
-        fetchCats()
+        // fetchCats()
     }, []);
 
-    function handleAddCategory() {
-        if (newCategory.replace(/\s+/g, '') !== "") {
-            addCategory(newCategory) 
-            fetchCats()
-            setNewCategory("")
-        }
-    }
+    // function handleAddCategory() {
+    //     if (newCategory.replace(/\s+/g, '') !== "") {
+    //         addCategory(newCategory) 
+    //         fetchCats()
+    //         setNewCategory("")
+    //     }
+    // }
 
-    function handleEditAddItem() {
-        if (pickedItem) {
-            editItem(name, description, number, category, status, pickedItem)
-            setPickedItem(0);
-            setEditing(0);
-        } else {
-            addItem(name, description, number, category, status)
-            setPickedItem(0);
-            setEditing(0);
-        }
-    }
+    // function handleEditAddItem() {
+    //     if (pickedItem) {
+    //         editItem(name, description, number, category, status, pickedItem)
+    //         setPickedItem(0);
+    //         setEditing(0);
+    //     } else {
+    //         addItem(name, description, number, category, status)
+    //         setPickedItem(0);
+    //         setEditing(0);
+    //     }
+    // }
 
-    console.log(items)
+    console.log(sizeName)
+    console.log(sizeQuantity)
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -216,69 +220,68 @@ export function AddVariation({type, pickedItem, setPickedItem, setEditing}) {
                             <TableHead className="w-[100px] text-center">Size</TableHead>
                             </TableRow>
                         </TableHeader>
-
-                        <TableBody>
-                            <TableRow>
-                            <TableCell className="font-semibold text-center">
-                                1
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <Label htmlFor="stock-1" className="sr-only">
-                                Stock
-                                </Label>
-                                <Input
-                                id="stock-1"
-                                type="text"
-                                defaultValue="Small"
-                                />
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <Label htmlFor="price-1" className="sr-only">
-                                Price
-                                </Label>
-                                <Input
-                                id="price-1"
-                                type="number"
-                                defaultValue="0"
-                                />
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <ToggleGroup
-                                type="single"
-                                defaultValue="s"
-                                variant="outline"
-                                >
-                                    <Button size="sm" className="p-[5px] h-fit"><Pencil height={20} width={20}/></Button>
-                                    <Button size="sm" className="p-[5px] h-fit"><Trash  height={20} width={20}/></Button>
-                                </ToggleGroup>
-                            </TableCell>
-                            </TableRow>
-                        </TableBody>
-
-                        <TableBody>
-                            <TableRow>
-                            <TableCell className="font-semibold text-center">
-                                1
-                            </TableCell>
-                            <TableCell className="font-semibold text-center">
-                                Small
-                            </TableCell>
-                            <TableCell className="font-semibold text-center">
-                                10
-                            </TableCell>
-                            <TableCell className="text-center">
-                                <ToggleGroup
-                                type="single"
-                                defaultValue="s"
-                                variant="outline"
-                                >
-                                    <Button size="sm" className="p-[5px] h-fit"><Save  height={20} width={20}/></Button>
-                                    <Button size="sm" className="p-[5px] h-fit"><X  height={20} width={20}/></Button>
-                                </ToggleGroup>
-                            </TableCell>
-                            </TableRow>
-                        </TableBody>
-
+                        {variation?.sizes.map((item) => (
+                            <TableBody key={item.id}>
+                                {editingSize === item.id && <TableRow>
+                                <TableCell className="font-semibold text-center">
+                                    {item.id}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Label htmlFor="stock-1" className="sr-only">
+                                    Stock
+                                    </Label>
+                                    <Input
+                                    id="stock-1"
+                                    type="text"
+                                    defaultValue={item.name}
+                                    onChange={(e) => setSizeName(e.target.value)}
+                                    />
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Label htmlFor="price-1" className="sr-only">
+                                    Price
+                                    </Label>
+                                    <Input
+                                    id="price-1"
+                                    type="number"
+                                    defaultValue={item.quantity}
+                                    onChange={(e) => setSizeQuantity(e.target.value)}
+                                    />
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <ToggleGroup
+                                    type="single"
+                                    defaultValue="s"
+                                    variant="outline"
+                                    >
+                                        <Button size="sm" className="p-[5px] h-fit"><Save  height={20} width={20}/></Button>
+                                        <Button size="sm" className="p-[5px] h-fit" onClick={(e) => setEditingSize(0)}><X  height={20} width={20}/></Button>
+                                    </ToggleGroup>
+                                </TableCell>
+                                </TableRow>}
+                                {editingSize !== item.id && <TableRow>
+                                <TableCell className="font-semibold text-center">
+                                    {item.id}
+                                </TableCell>
+                                <TableCell className="font-semibold text-center">
+                                    {item.name}
+                                </TableCell>
+                                <TableCell className="font-semibold text-center">
+                                    {item.quantity}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <ToggleGroup
+                                    type="single"
+                                    defaultValue="s"
+                                    variant="outline"
+                                    >
+                                        <Button size="sm" className="p-[5px] h-fit" onClick={(e) => {setEditingSize(item.id);setSizeName(item.name);setSizeQuantity(item.quantity)}}><Pencil height={20} width={20}/></Button>
+                                        <Button size="sm" className="p-[5px] h-fit"><Trash  height={20} width={20}/></Button>
+                                    </ToggleGroup>
+                                </TableCell>
+                                </TableRow>}
+                            </TableBody>
+                        ))}
                         </Table>
                     </CardContent>
                     <CardFooter className="justify-center border-t p-4">

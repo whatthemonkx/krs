@@ -13,7 +13,7 @@ import { AddVariation } from "@/components/AddVariation";
 
 
 export default function Products() {
-  const [pickedItem, setPickedItem] = useState(0);
+  const [pickedItem, setPickedItem] = useState(1);
   const [editing, setEditing] = useState(0);
 
   return (
@@ -106,8 +106,8 @@ export default function Products() {
       {/* {editing === 0 && pickedItem !== 0 && <Variations setPickedItem={setPickedItem} pickedItem={pickedItem}/>} */}
       {/* {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>} */}
       {/* {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>} */}
-      <AddVariation type={"New"}/>
-      <AddVariation type={"Old"}/>
+      <AddVariation type={"New"} pickedItem={pickedItem}/>
+      <AddVariation type={"Old"} pickedItem={pickedItem}/>
     </div>
   )
 }
