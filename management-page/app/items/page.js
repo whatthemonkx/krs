@@ -19,6 +19,7 @@ export default function Products() {
   const [editing, setEditing] = useState(0);
   const { currentUser, logout } = useContext(AuthContext);
   const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
 
   async function handleLogout(e) {
     e.preventDefault();
@@ -34,8 +35,13 @@ export default function Products() {
     if (!currentUser) {
       router.push("/");
     }
+    setHydrated(true);
   }, [currentUser, router]);
 
+  if (!hydrated) {
+    return null; 
+  }
+  
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="sticky z-[1000] top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">

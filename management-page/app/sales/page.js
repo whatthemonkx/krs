@@ -26,6 +26,7 @@ export default function Sales() {
   const yearSales = filter === 0 && sales ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status === "Pending") : sales && [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status !== "Pending");
   const { currentUser, logout } = useContext(AuthContext);
   const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
 
   async function handleLogout(e) {
     e.preventDefault();
@@ -50,7 +51,12 @@ export default function Sales() {
   
   useEffect(() => {
     fetchItems()
+    setHydrated(true);
   }, []);
+
+  if (!hydrated) {
+    return null; 
+  }  
 
   function formatToDollar(amount) {
     return new Intl.NumberFormat('en-US', {
