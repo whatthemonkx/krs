@@ -1,13 +1,13 @@
 import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import itemRoutes from './routes/items.js';
 import salesRoutes from './routes/sales.js';
 import categoriesRoutes from './routes/categories.js';
 import uploadRoutes from './routes/upload.js';
 import authRoutes from './routes/auth.js';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 const app = express();
 
@@ -21,13 +21,23 @@ app.use(cors({
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 
 app.use('/items', itemRoutes);
 app.use('/sales', salesRoutes);
 app.use('/categories', categoriesRoutes);
-app.use('/upload', uploadRoutes);
+app.use('/upload', cors({
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001',
+    'https://konga71-landing.vercel.app', 
+    'https://konga71-management.vercel.app'
+  ], 
+  methods: 'POST',
+  allowedHeaders: 'Content-Type,Authorization',
+}), uploadRoutes);
 app.use("/auth", authRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
