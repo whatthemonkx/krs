@@ -166,13 +166,13 @@ export default function Sales() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Filter by</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked={filter === 0} onClick={(e) => setFilter(0)}>
+                      <DropdownMenuCheckboxItem checked={filter === 0} onClick={() => setFilter(0)}>
                         All
                       </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem checked={filter === 1} onClick={(e) => setFilter(1)}>
+                      <DropdownMenuCheckboxItem checked={filter === 1} onClick={() => setFilter(1)}>
                         Pending
                       </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem checked={filter === 2} onClick={(e) => setFilter(2)}>
+                      <DropdownMenuCheckboxItem checked={filter === 2} onClick={() => setFilter(2)}>
                         Fulfilled
                       </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
@@ -200,7 +200,7 @@ export default function Sales() {
                       </TableHeader>
                       <TableBody>
                         {allSales.map((sale) => (
-                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -244,7 +244,7 @@ export default function Sales() {
                       </TableHeader>
                       <TableBody>
                         {weekSales.map((sale) => (
-                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -288,7 +288,7 @@ export default function Sales() {
                       </TableHeader>
                       <TableBody>
                         {monthSales.map((sale) => (
-                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -332,7 +332,7 @@ export default function Sales() {
                       </TableHeader>
                       <TableBody>
                         {yearSales.map((sale) => (
-                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={(e) => setCurrentSale(sale.id)}>
+                          <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
                               <div className="hidden text-sm text-muted-foreground md:inline">
@@ -377,7 +377,7 @@ export default function Sales() {
                   <CardDescription>Date: {formatDate(currentSaleInfo.time)}</CardDescription>
                 </div>
                 <div className="ml-auto flex items-center gap-1">
-                  <Button size="sm" variant="outline" className="h-8 gap-1" onClick={(e) => handleFulfillOrder(currentSaleInfo.id)}>
+                  <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => handleFulfillOrder(currentSaleInfo.id)}>
                     <Truck className="h-3.5 w-3.5" />
                     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
                       Fulfill Order

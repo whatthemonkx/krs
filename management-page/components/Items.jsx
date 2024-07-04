@@ -52,7 +52,7 @@ export default function Items({setPickedItem, setEditing}) {
                 </TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
-                    <Button size="sm" className="h-7 gap-1"  onClick={(e) => setEditing(1)}>
+                    <Button size="sm" className="h-7 gap-1"  onClick={() => setEditing(1)}>
                         <PlusCircle className="h-3.5 w-3.5" />
                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                         Add Product
@@ -120,9 +120,9 @@ export default function Items({setPickedItem, setEditing}) {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem onClick={(e) => {setPickedItem(item.item_id); setEditing(2)}}>Edit item info</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={(e) => setPickedItem(item.item_id)}>Go to variations</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={(e) => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => {setPickedItem(item.item_id); setEditing(2)}}>Edit item info</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setPickedItem(item.item_id)}>Go to variations</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 </TableCell>
@@ -194,7 +194,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                     <a href={`/items/${item.item_id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
-                                    <DropdownMenuItem onClick={(e) => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 </TableCell>
@@ -266,7 +266,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                     <a href={`/items/${item.item_id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
-                                    <DropdownMenuItem onClick={(e) => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 </TableCell>
@@ -338,7 +338,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                     <a href={`/items/${item.item_id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
-                                    <DropdownMenuItem onClick={(e) => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 </TableCell>

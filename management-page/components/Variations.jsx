@@ -37,7 +37,7 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
             <div className="flex items-center">
-                <Button variant="outline" size="icon" className="h-7 w-7 mr-5" onClick={(e) => setPickedItem(0)}>
+                <Button variant="outline" size="icon" className="h-7 w-7 mr-5" onClick={() => setPickedItem(0)}>
                     <ChevronLeft className="h-4 w-4" />
                     <span className="sr-only">Back</span>
                 </Button>
@@ -50,7 +50,7 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                     </TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
-                    <Button size="sm" className="h-7 gap-1" onClick={(e) => setPickedVariant(-1)}>
+                    <Button size="sm" className="h-7 gap-1" onClick={() => setPickedVariant(-1)}>
                         <PlusCircle className="h-3.5 w-3.5" />
                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                         Add Variation
@@ -115,8 +115,8 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem onClick={(e) => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -189,8 +189,8 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem onClick={(e) => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -263,8 +263,8 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem onClick={(e) => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -338,8 +338,8 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem onClick={(e) => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={(e) => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setPickedVariant(item.id)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleDeleteVariation(item.id)}>Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>

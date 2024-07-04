@@ -83,3 +83,14 @@ export const editItem = async (name, description, price, itemType, status, id) =
         console.error('Error fetching users:', error);
     }
 };
+
+export const deleteSize = async (id) => {
+    try {
+        const response = await axios.post(`${API_URL}/items/deleteSize`, {
+            id: id
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
