@@ -152,7 +152,7 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
     }
 
     // console.log(sizeName)
-    console.log(typeof(pickedItem))
+    console.log(variation?.images?.[0]?.name)
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -352,7 +352,7 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                         </CardContent>
                         </Card>
 
-                        <Card
+                        {type === "Old" && <Card
                         className="overflow-hidden" x-chunk="dashboard-07-chunk-4"
                         >
                         <CardHeader>
@@ -364,7 +364,7 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                                 alt="Variation image"
                                 className="aspect-square w-full rounded-md object-cover"
                                 height="300"
-                                src="http://via.placeholder.com/300x300"
+                                src={variation?.images?.[0]?.name ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variation?.images?.[0]?.name}` : "http://via.placeholder.com/300x300"}
                                 width="300"
                             />
                             <div className="grid grid-cols-1 gap-2">
@@ -375,7 +375,7 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                             </div>
                             </div>
                         </CardContent>
-                        </Card>
+                        </Card>}
                     </div>
 
                 </div>
