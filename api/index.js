@@ -11,13 +11,15 @@ import authRoutes from './routes/auth.js';
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://konga71-landing.vercel.app',
+  'https://konga71-management.vercel.app'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:3000', 
-    'http://localhost:3001',
-    'https://konga71-landing.vercel.app', 
-    'https://konga71-management.vercel.app'
-  ], 
+  origin: allowedOrigins,
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 }));
@@ -28,17 +30,14 @@ app.use(express.json());
 app.use('/items', itemRoutes);
 app.use('/sales', salesRoutes);
 app.use('/categories', categoriesRoutes);
+
 app.use('/upload', cors({
-  origin: [
-    'http://localhost:3000', 
-    'http://localhost:3001',
-    'https://konga71-landing.vercel.app', 
-    'https://konga71-management.vercel.app'
-  ], 
+  origin: allowedOrigins,
   methods: 'POST',
   allowedHeaders: 'Content-Type,Authorization',
 }), uploadRoutes);
-app.use("/auth", authRoutes);
+
+app.use('/auth', authRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -1,5 +1,4 @@
 import { db } from "../db.js";
-
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
@@ -39,12 +38,18 @@ export const uploadImage = [
 
       const updateQuery = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
       db.query(updateQuery, [name, item, status, variant], (err) => {
-        if (err) throw err;
+        if (err) {
+          console.error('Database query error:', err);
+          return res.status(500).json({ error: 'Database query error' });
+        }
       });
 
       const insertQuery = 'INSERT INTO `images` (`name`, `variation`) VALUES (?, ?)';
       db.query(insertQuery, [newImageName, variant], (err) => {
-        if (err) throw err;
+        if (err) {
+          console.error('Database insert error:', err);
+          return res.status(500).json({ error: 'Database insert error' });
+        }
       });
 
       const oldImagePath = path.join(__dirname, '../itemImages', oldImageName);
@@ -74,14 +79,24 @@ export const uploadFirstImage = [
     try {
       const newImageName = req.file.filename;
 
+      if (typeof variant === 'undefined') {
+        throw new Error('Variant is required');
+      }
+
       const updateQuery = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
       db.query(updateQuery, [name, item, status, variant], (err) => {
-        if (err) throw err;
+        if (err) {
+          console.error('Database update error:', err);
+          return res.status(500).json({ error: 'Database update error' });
+        }
       });
 
       const insertQuery = 'INSERT INTO `images` (`name`, `variation`) VALUES (?, ?)';
       db.query(insertQuery, [newImageName, variant], (err) => {
-        if (err) throw err;
+        if (err) {
+          console.error('Database insert error:', err);
+          return res.status(500).json({ error: 'Database insert error' });
+        }
       });
 
       res.status(200).json({ data: 'success', file: req.file });
@@ -96,8 +111,11 @@ export const editVariation = (req, res) => {
   const q = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
 
   db.query(q, [req.body.name, req.body.item, req.body.status, req.body.variant], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ error: 'Database query error' });
+    }
+    return res.status(200).json(data);
   });
 };
 
@@ -105,7 +123,10 @@ export const addVariation = (req, res) => {
   const q = 'INSERT INTO `variations` (`name`, `item`, `status`) VALUES (?, ?, ?);';
 
   db.query(q, [req.body.name, req.body.item, req.body.status], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json(data);
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ error: 'Database query error' });
+    }
+    return res.status(200).json(data);
   });
 };
