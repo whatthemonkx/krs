@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import itemRoutes from './routes/items.js';
 import salesRoutes from './routes/sales.js';
 import categoriesRoutes from './routes/categories.js';
