@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_SERVER_LINK;
 
 export const getCategories = async () => {
     try {
-        const response = await axios.get(`${API_URL}/catagories`);
+        const response = await axios.get(`${API_URL}/categories`);
         return response.data;
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -13,7 +13,7 @@ export const getCategories = async () => {
 
 export const addCategory = async (name) => {
     try {
-        const response = await axios.post(`${API_URL}/catagories/add`, {
+        const response = await axios.post(`${API_URL}/categories/add`, {
             name: name
         });
         return response.data;

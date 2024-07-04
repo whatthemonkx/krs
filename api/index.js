@@ -11,7 +11,16 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001',
+    'https://konga71-landing.vercel.app', 
+    'https://konga71-management.vercel.app'
+  ], 
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
 app.use(cookieParser());
 app.use(express.json());
 

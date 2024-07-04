@@ -12,9 +12,9 @@ import { getItems, deleteItem } from "../app/api/items";
 
 export default function Items({setPickedItem, setEditing}) {
     const [items, setItems] = useState([]);
-    const activeItems = [...items].filter(item => item.item_status === "Active")
-    const draftItems = [...items].filter(item => item.item_status === "Draft")  
-    const archivedItems = [...items].filter(item => item.item_status === "Archived") 
+    const activeItems = items && [...items].filter(item => item.item_status === "Active")
+    const draftItems = items && [...items].filter(item => item.item_status === "Draft")  
+    const archivedItems = items && [...items].filter(item => item.item_status === "Archived") 
 
     const fetchItems = async () => {
         const items = await getItems();
@@ -81,7 +81,7 @@ export default function Items({setPickedItem, setEditing}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {items.map((item) => (
+                        {items?.map((item) => (
                             <TableRow key={item.item_id}>
                                 <TableCell className="hidden sm:table-cell">
                                 <img
@@ -154,7 +154,7 @@ export default function Items({setPickedItem, setEditing}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {activeItems.map((item) => (
+                        {activeItems?.map((item) => (
                             <TableRow key={item.item_id}>
                                 <TableCell className="hidden sm:table-cell">
                                 <img
@@ -227,7 +227,7 @@ export default function Items({setPickedItem, setEditing}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {draftItems.map((item) => (
+                        {draftItems?.map((item) => (
                             <TableRow key={item.item_id}>
                                 <TableCell className="hidden sm:table-cell">
                                 <img
@@ -300,7 +300,7 @@ export default function Items({setPickedItem, setEditing}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {archivedItems.map((item) => (
+                        {archivedItems?.map((item) => (
                             <TableRow key={item.item_id}>
                                 <TableCell className="hidden sm:table-cell">
                                 <img
