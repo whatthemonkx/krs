@@ -15,7 +15,9 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://konga71-landing.vercel.app',
-  'https://konga71-management.vercel.app'
+  'https://konga71-management.vercel.app',
+  'https://konga71-management-kris-sawyerrs-projects.vercel.app',
+  'https://konga71-management-git-main-kris-sawyerrs-projects.vercel.app',
 ];
 
 app.use(cors({
