@@ -82,6 +82,7 @@ const AccountPage = () => {
                   className='mainpageItemImage'
                   src={currentItem.images[0].url}
                   alt=""
+                  width={500}
                 />
               </div>
             )}

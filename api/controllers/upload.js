@@ -17,19 +17,24 @@ export const uploadImage = [
     }
 
     try {
-      // Prepare the image data for Imgbb
       const formData = new FormData();
       formData.append('image', req.file.buffer.toString('base64'));
       formData.append('key', process.env.IMGBB_API_KEY);
 
-      // Upload the image to Imgbb
       const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
         headers: formData.getHeaders(),
       });
 
       const newImageUrl = response.data.data.url;
 
-      // Update the variation in the database
+      const q = 'DELETE FROM `store`.`images` WHERE (`variation` = ?);';
+      db.query(q, [variant], (err) => {
+        if (err) {
+          console.error('Database query error:', err);
+          return res.status(500).json({ error: 'Database query error' });
+        }
+      });
+
       const updateQuery = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
       db.query(updateQuery, [name, item, status, variant], (err) => {
         if (err) {
@@ -38,7 +43,6 @@ export const uploadImage = [
         }
       });
 
-      // Insert the new image record into the database
       const insertQuery = 'INSERT INTO `images` (`name`, `variation`, `url`) VALUES (?, ?, ?)';
       db.query(insertQuery, [req.file.originalname, variant, newImageUrl], (err) => {
         if (err) {
@@ -46,12 +50,6 @@ export const uploadImage = [
           return res.status(500).json({ error: 'Database insert error' });
         }
       });
-
-      // Optionally, delete the old image (if required)
-      if (oldImageName) {
-        // Imgbb does not support direct deletion of images through API.
-        // Consider a different approach or omit this step.
-      }
 
       res.status(200).json({ data: 'success', file: { filename: req.file.originalname, url: newImageUrl } });
     } catch (error) {
@@ -73,19 +71,16 @@ export const uploadFirstImage = [
     }
 
     try {
-      // Prepare the image data for Imgbb
       const formData = new FormData();
       formData.append('image', req.file.buffer.toString('base64'));
       formData.append('key', process.env.IMGBB_API_KEY);
 
-      // Upload the image to Imgbb
       const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
         headers: formData.getHeaders(),
       });
 
       const newImageUrl = response.data.data.url;
 
-      // Update the variation in the database
       const updateQuery = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
       db.query(updateQuery, [name, item, status, variant], (err) => {
         if (err) {
@@ -94,7 +89,6 @@ export const uploadFirstImage = [
         }
       });
 
-      // Insert the new image record into the database
       const insertQuery = 'INSERT INTO `images` (`name`, `variation`, `url`) VALUES (?, ?, ?)';
       db.query(insertQuery, [req.file.originalname, variant, newImageUrl], (err) => {
         if (err) {
