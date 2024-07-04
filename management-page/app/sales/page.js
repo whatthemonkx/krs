@@ -18,12 +18,12 @@ import { useRouter } from 'next/navigation'
 export default function Sales() {
   const [sales, setSales] = useState([]);
   const [currentSale, setCurrentSale] = useState(0);
-  const currentSaleInfo = sales.find(sale => sale.id === currentSale);
+  const currentSaleInfo = sales?.find(sale => sale.id === currentSale);
   const [filter, setFilter] = useState(0);
-  const allSales = filter === 0 ? [...sales].reverse() : filter === 1 ? [...sales].reverse().filter(item => item.status === "Pending") : [...sales].reverse().filter(item => item.status !== "Pending");
-  const weekSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status !== "Pending");
-  const monthSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status !== "Pending");
-  const yearSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status !== "Pending");
+  const allSales = filter === 0 && sales ? [...sales].reverse() : filter === 1 ? [...sales].reverse().filter(item => item.status === "Pending") : sales && [...sales].reverse().filter(item => item.status !== "Pending");
+  const weekSales = filter === 0 && sales ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status === "Pending") : sales && [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status !== "Pending");
+  const monthSales = filter === 0 && sales ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status === "Pending") : sales && [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status !== "Pending");
+  const yearSales = filter === 0 && sales ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status === "Pending") : sales && [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status !== "Pending");
   const { currentUser, logout } = useContext(AuthContext);
   const router = useRouter();
 
@@ -219,7 +219,7 @@ export default function Sales() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {allSales.map((sale) => (
+                        {allSales?.map((sale) => (
                           <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
@@ -263,7 +263,7 @@ export default function Sales() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {weekSales.map((sale) => (
+                        {weekSales?.map((sale) => (
                           <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
@@ -307,7 +307,7 @@ export default function Sales() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {monthSales.map((sale) => (
+                        {monthSales?.map((sale) => (
                           <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>
@@ -351,7 +351,7 @@ export default function Sales() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {yearSales.map((sale) => (
+                        {yearSales?.map((sale) => (
                           <TableRow key={sale.id} className={currentSale === sale.id && "bg-accent"} onClick={() => setCurrentSale(sale.id)}>
                             <TableCell>
                               <div className="font-medium">{sale.name}</div>

@@ -20,9 +20,9 @@ function Dashboard() {
   const [rev30Days, setRev30Days] = useState(0);
   const [itemsSold, setItemsSold] = useState(0);
   const [itemsSold30Days, setItemsSold30Days] = useState(0);
-  const totalSales = sales.filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).length;
-  const pendingOrders = sales.filter(item => item.status === "Pending").length;
-  const recentSale = [...sales].reverse().slice(0, 6);
+  const totalSales = sales?.filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).length;
+  const pendingOrders = sales?.filter(item => item.status === "Pending").length;
+  const recentSale = sales && [...sales].reverse().slice(0, 6);
   const { currentUser, logout } = useContext(AuthContext);
   const router = useRouter();
 
@@ -220,7 +220,7 @@ function Dashboard() {
             <CardContent>
               <div className="text-2xl font-bold">+{totalSales} Sales</div>
               <p className="text-xs text-muted-foreground">
-                {sales.length} sales all time
+                {sales?.length} sales all time
               </p>
             </CardContent>
           </Card>
@@ -275,7 +275,7 @@ function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentSale.map((sale) => (
+                  {recentSale?.map((sale) => (
                     <TableRow key={sale.id}>
                       <TableCell className="font-medium">
                         <div className="flex items-center">
@@ -303,7 +303,7 @@ function Dashboard() {
               <CardTitle>Low Stock</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8 max-h-[420px] overflow-y-auto">
-              {sizes.map((size) => (
+              {sizes?.map((size) => (
                 <div key={size.size_id} className="flex items-center gap-4">
                   <Avatar className="hidden h-9 w-9 sm:flex">
                     <AvatarImage src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${size.image}`} alt="Avatar" />

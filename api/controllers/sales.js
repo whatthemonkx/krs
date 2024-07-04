@@ -1,7 +1,7 @@
 import { db } from "../db.js";
 
 export const inputSale = (req, res) => {
-    const transactionQuery = "INSERT INTO `store`.`transaction` (`name`, `address1`, `address2`, `city`, `zip`, `state`, `email`, `totalPrice`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const transactionQuery = "INSERT INTO `transaction` (`name`, `address1`, `address2`, `city`, `zip`, `state`, `email`, `totalPrice`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(transactionQuery, [ req.body.name, req.body.address1, req.body.address2, req.body.city, req.body.zip, req.body.state, req.body.email, req.body.totalPrice], (err, result) => {
         if (err) return res.status(500).json(err);
@@ -13,7 +13,7 @@ export const inputSale = (req, res) => {
         return res.json({ message: "Sale has been created.", transactionId: transactionId });
         }
 
-        const soldItemsQuery = "INSERT INTO `store`.`solditems` (`sizeId`, `quantity`, `transaction`) VALUES (?, ?, ?)";
+        const soldItemsQuery = "INSERT INTO `solditems` (`sizeId`, `quantity`, `transaction`) VALUES (?, ?, ?)";
         
         let completedQueries = 0;
         const errors = [];
@@ -24,7 +24,7 @@ export const inputSale = (req, res) => {
                     errors.push(err);
                 }
 
-                const updateQuantityQuery = "UPDATE `store`.`sizes` SET `quantity` = `quantity` - ? WHERE (`id` = ?)";
+                const updateQuantityQuery = "UPDATE `sizes` SET `quantity` = `quantity` - ? WHERE (`id` = ?)";
 
                 db.query(updateQuantityQuery, [item.quantity, item.sizeId], (err, result) => {
                     if (err) { errors.push(err) }
@@ -49,7 +49,7 @@ export const inputSale = (req, res) => {
 };
 
 export const getSoldItems = (req, res) => {
-    const q = `SELECT * FROM store.solditems`;
+    const q = `SELECT * FROM solditems`;
 
     db.query(q, [], (err, data) => {
         if (err) return res.status(500).json(err);
@@ -58,7 +58,7 @@ export const getSoldItems = (req, res) => {
 };
 
 export const getTransactions = (req, res) => {
-    const q = `SELECT * FROM store.transaction`;
+    const q = `SELECT * FROM transaction`;
 
     db.query(q, [], (err, data) => {
         if (err) return res.status(500).json(err);
@@ -80,10 +80,10 @@ export const getSoldOutSizes = (req, res) => {
         i.price AS item_price,
         i.itemType AS item_type,
         p.name AS image
-    FROM store.sizes s
-    LEFT JOIN store.variations v ON s.variation = v.id
-    LEFT JOIN store.items i ON v.item = i.id
-    LEFT JOIN store.images p ON v.id = p.variation
+    FROM sizes s
+    LEFT JOIN variations v ON s.variation = v.id
+    LEFT JOIN items i ON v.item = i.id
+    LEFT JOIN images p ON v.id = p.variation
     WHERE s.quantity <= 3;   
     `;
   
@@ -135,7 +135,7 @@ GROUP BY t.id;
 };
 
 export const changeTranactionStatus = (req, res) => {
-    const q = "UPDATE `store`.`transaction` SET `status` = 'Fulfilled' WHERE (`id` = ?);";
+    const q = "UPDATE `transaction` SET `status` = 'Fulfilled' WHERE (`id` = ?);";
 
     db.query(q, [req.body.id], (err, data) => {
         if (err) return res.status(500).json(err);

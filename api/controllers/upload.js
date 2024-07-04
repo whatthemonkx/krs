@@ -102,7 +102,7 @@ export const editVariation = (req, res) => {
 };
 
 export const addVariation = (req, res) => {
-  const q = 'INSERT INTO `store`.`variations` (`name`, `item`, `status`) VALUES (?, ?, ?);';
+  const q = 'INSERT INTO `variations` (`name`, `item`, `status`) VALUES (?, ?, ?);';
 
   db.query(q, [req.body.name, req.body.item, req.body.status], (err, data) => {
       if (err) return res.status(500).json(err);
