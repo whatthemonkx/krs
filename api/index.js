@@ -3,6 +3,7 @@ import itemRoutes from './routes/items.js';
 import salesRoutes from './routes/sales.js';
 import categoriesRoutes from './routes/categories.js';
 import uploadRoutes from './routes/upload.js';
+import authRoutes from './routes/auth.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -18,6 +19,7 @@ app.use('/items', itemRoutes);
 app.use('/sales', salesRoutes);
 app.use('/categories', categoriesRoutes);
 app.use('/upload', uploadRoutes);
+app.use("/auth", authRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Copy, ListFilter, Truck, CircleUser, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTransactionsWithItems, fulfillOrder } from "../api/sales";
+import { AuthContext } from '../context/authContext';
+import { useRouter } from 'next/navigation' 
 
 export default function Sales() {
   const [sales, setSales] = useState([]);
@@ -22,7 +24,25 @@ export default function Sales() {
   const weekSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 7))).filter(item => item.status !== "Pending");
   const monthSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 30))).filter(item => item.status !== "Pending");
   const yearSales = filter === 0 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))) : filter === 1 ? [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status === "Pending") : [...sales].reverse().filter(item => new Date(item.time) >= new Date(new Date().setDate(new Date().getDate() - 365))).filter(item => item.status !== "Pending");
+  const { currentUser, logout } = useContext(AuthContext);
+  const router = useRouter();
 
+  async function handleLogout(e) {
+    e.preventDefault();
+    try {
+      await logout()
+      router.push("/");
+    } catch (err) {
+      setErr(err.response.data);
+    }
+  }
+
+  useEffect(() => {
+    if (!currentUser) {
+      router.push("/");
+    }
+  }, [currentUser, router]);
+  
   const fetchItems = async () => {
     const sales = await getTransactionsWithItems();
     setSales(sales);
@@ -59,13 +79,13 @@ export default function Sales() {
       <header className="sticky z-[1000] top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <Link
-            href="#"
+            href="/dashboard"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
             <div className='title w-[150px]'>KoNGA-71</div>
           </Link>
           <Link
-            href="/"
+            href="/dashboard"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Dashboard
@@ -120,7 +140,7 @@ export default function Sales() {
             </nav>
           </SheetContent>
         </Sheet>
-        <div className="flex justify-end w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+        {currentUser && <div className="flex justify-end w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
@@ -130,17 +150,17 @@ export default function Sales() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+               
+               
+               
+               
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+        </div>}
       </header>
 
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+      {currentUser && <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <Tabs defaultValue="all">
@@ -165,7 +185,7 @@ export default function Sales() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
+                       
                       <DropdownMenuCheckboxItem checked={filter === 0} onClick={() => setFilter(0)}>
                         All
                       </DropdownMenuCheckboxItem>
@@ -436,7 +456,7 @@ export default function Sales() {
             </Card>}
           </div>
         </main>
-      </div>
+      </div>}
     </div>
   )
 }

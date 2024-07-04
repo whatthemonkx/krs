@@ -193,7 +193,8 @@ export default function Items({setPickedItem, setEditing}) {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <a href={`/items/${item.item_id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                    <DropdownMenuItem onClick={() => {setPickedItem(item.item_id); setEditing(2)}}>Edit item info</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setPickedItem(item.item_id)}>Go to variations</DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
@@ -265,7 +266,8 @@ export default function Items({setPickedItem, setEditing}) {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <a href={`/items/${item.item_id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                    <DropdownMenuItem onClick={() => {setPickedItem(item.item_id); setEditing(2)}}>Edit item info</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setPickedItem(item.item_id)}>Go to variations</DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
@@ -337,7 +339,8 @@ export default function Items({setPickedItem, setEditing}) {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <a href={`/items/${item.item_id}`}><DropdownMenuItem>Edit</DropdownMenuItem></a>
+                                    <DropdownMenuItem onClick={() => {setPickedItem(item.item_id); setEditing(2)}}>Edit item info</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setPickedItem(item.item_id)}>Go to variations</DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => handleDeleteItem(item.item_id)}>Delete</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>

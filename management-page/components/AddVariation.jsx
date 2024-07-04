@@ -53,25 +53,20 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
         event.preventDefault();
 
         if (type === "New") {
-            const data = await addVariation(name, pickedItem, status);
-            console.log('Image uploaded successfully addVariation:', data);
+            await addVariation(name, pickedItem, status);
             setPickedVariant(0)
             return
         }
         if (!name || !pickedItem || !status || !pickedVariant) {
-            console.log("oof")
             return; 
         } 
         try {
             if (typeof(file) === "string" || file === undefined) {
-                const data = await editVariation(name, pickedItem, status, pickedVariant);
-                console.log('Image uploaded successfully editVariation:', data);
+                await editVariation(name, pickedItem, status, pickedVariant);
             } else if (oldImageName === undefined) {
-                const data = await uploadFirstImage(file, name, pickedItem, status, pickedVariant);
-                console.log('Image uploaded successfully uploadFirstImage:', data);
+                await uploadFirstImage(file, name, pickedItem, status, pickedVariant);
             } else {
-                const data = await uploadImage(file, name, pickedItem, status, oldImageName, pickedVariant);
-                console.log('Image uploaded successfully uploadImage:', data);
+                await uploadImage(file, name, pickedItem, status, oldImageName, pickedVariant);
             }
             setPickedVariant(0)
         } catch (error) {
