@@ -56,10 +56,12 @@ SELECT
     i.description AS item_description,
     i.price AS item_price,
     i.itemType AS item_type,
+    i.status AS item_status,
     JSON_ARRAYAGG(
         JSON_OBJECT(
             'id', v.id,
             'name', v.name,
+            'status', v.status,
             'sizes', (
                 SELECT JSON_ARRAYAGG(
                     JSON_OBJECT(

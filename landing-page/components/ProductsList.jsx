@@ -13,11 +13,10 @@ const ProductsList = () => {
     fetchItems();
   }, []);
 
-
   return (
     <div className='itemsSection'>
       <div className='itemsContainer'>
-        {items.map((item) => (
+        {items.filter(item => item.item_status === "Active").map((item) => (
           <div key={item.item_id}>
             <Product item={item} />
           </div>

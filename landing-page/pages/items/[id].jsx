@@ -67,7 +67,6 @@ const AccountPage = () => {
     }
   };
 
-
   return (
     <div className='pageContainer'>
       {loading && <Loading />}
@@ -89,11 +88,11 @@ const AccountPage = () => {
               <div>{currentItem?.name}</div>
               <div>{item.item_description}</div>
               <div className='varientSelection'>
-                {item.variations.map((variant) => (
-                  <div key={variant.id} className='singleVarientSelection' onClick={() => { variant.id !== currentItem.id && handleVariantClick(variant) }}>
+                {item.variations.filter(item => item.status === "Active").map((variant) => (
+                  variant.sizes?.[0]?.name && variant.images?.[0].name && <div key={variant.id} className='singleVarientSelection' onClick={() => { variant.id !== currentItem.id && handleVariantClick(variant) }}>
                     <img
                       className='mainpageItemImage'
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variant.images[0].name}`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variant.images?.[0].name}`}
                       alt=""
                       height={50}
                       width={50}
@@ -114,7 +113,7 @@ const AccountPage = () => {
                 <>
                   <label htmlFor="quantity">Select quantity: </label>
                   <select name="quantity" id="quantity" onChange={(e) => setQuantity(e.target.value)}>
-                    {[...Array(maxQuantity)].map((_, index) => (
+                    {[...Array(maxQuantity > 10 ? 10 : maxQuantity)].map((_, index) => (
                       <option key={index + 1} value={index + 1} className="selection">{index + 1}</option>
                     ))}
                   </select>
