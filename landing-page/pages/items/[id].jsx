@@ -27,7 +27,7 @@ const AccountPage = () => {
         const items = await getSingleItems(id);
         const firstItem = items[0];
         setItem(firstItem);
-        setCurrentItem(firstItem.variations[0]);
+        setCurrentItem(firstItem.variations.filter(item => item.status === "Active")[0]);
       }
     };
 
@@ -67,6 +67,8 @@ const AccountPage = () => {
     }
   };
 
+  console.log(item)
+
   return (
     <div className='pageContainer'>
       {loading && <Loading />}
@@ -78,7 +80,7 @@ const AccountPage = () => {
               <div className='singleItemImage'>
                 <img
                   className='mainpageItemImage'
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${currentItem.images[0].name}`}
+                  src={currentItem.images[0].url}
                   alt=""
                 />
               </div>
@@ -92,7 +94,7 @@ const AccountPage = () => {
                   variant.sizes?.[0]?.name && variant.images?.[0].name && <div key={variant.id} className='singleVarientSelection' onClick={() => { variant.id !== currentItem.id && handleVariantClick(variant) }}>
                     <img
                       className='mainpageItemImage'
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variant.images?.[0].name}`}
+                      src={variant.images?.[0].url}
                       alt=""
                       height={50}
                       width={50}

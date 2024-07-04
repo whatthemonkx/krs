@@ -313,7 +313,7 @@ function Dashboard() {
               {sizes?.map((size) => (
                 <div key={size.size_id} className="flex items-center gap-4">
                   <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarImage src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${size.image}`} alt="Avatar" />
+                    <AvatarImage src={size.image} alt="Avatar" />
                     <AvatarFallback>{size.size_id}</AvatarFallback>
                   </Avatar>
                   <div className="grid gap-1">

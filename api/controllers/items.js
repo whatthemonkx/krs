@@ -29,7 +29,8 @@ SELECT
                 SELECT JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', img.id,
-                        'name', img.name
+                        'name', img.name,
+                        'url', img.url
                     )
                 )
                 FROM images img
@@ -77,6 +78,7 @@ SELECT
                 SELECT JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', img.id,
+                        'url', img.url,
                         'name', img.name
                     )
                 )

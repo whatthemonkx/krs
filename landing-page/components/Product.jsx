@@ -2,7 +2,7 @@ const Product = ({ item }) => {
   return (
     item.variations[0].images?.[0].name && <a href={`/items/${item.item_id}`}>
       <div className='singleItem'>
-        <img className='mainpageItemImage' src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations[0].images[0].name}`} alt="" />
+        <img className='mainpageItemImage' src={item.variations[0].images[0].url} alt="" />
         <h3>{item.item_name}</h3>
         <p>Price: ${item.item_price}</p>
       </div>

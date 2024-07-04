@@ -292,7 +292,7 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                                 alt="Variation image"
                                 className="aspect-square w-full rounded-md object-cover"
                                 height="300"
-                                src={typeof(file) === "object" ? imagePreview : variation?.images?.[0]?.name ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variation?.images?.[0]?.name}` : "http://via.placeholder.com/300x300"}
+                                src={typeof(file) === "object" ? imagePreview : variation?.images?.[0]?.name ? variation?.images?.[0]?.url : "http://via.placeholder.com/300x300"}
                                 width="300"
                             />
                             {file && typeof(file) === 'object' && <p>Selected file: {file.name}</p>}

@@ -90,7 +90,7 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                                 item.images &&
                                                 item.images[0] &&
                                                 item.images[0].name
-                                                ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                                ? item.images[0].url
                                                 : 'http://via.placeholder.com/100x100'
                                             }
                                         />
@@ -164,7 +164,7 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                                 item.images &&
                                                 item.images[0] &&
                                                 item.images[0].name
-                                                ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                                ? item.images[0].url
                                                 : 'http://via.placeholder.com/100x100'
                                             }
                                         />
@@ -238,7 +238,7 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                                 item.images &&
                                                 item.images[0] &&
                                                 item.images[0].name
-                                                ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                                ? item.images[0].url
                                                 : 'http://via.placeholder.com/100x100'
                                             }
                                         />
@@ -312,7 +312,7 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                                 item.images &&
                                                 item.images[0] &&
                                                 item.images[0].name
-                                                ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`
+                                                ? item.images[0].url
                                                 : 'http://via.placeholder.com/100x100'
                                             }
                                         />

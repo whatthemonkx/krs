@@ -1,26 +1,9 @@
 import { db } from "../db.js";
-import path from 'path';
-import fs from 'fs';
 import multer from 'multer';
-import { fileURLToPath } from 'url';
+import axios from 'axios';
+import FormData from 'form-data';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../itemImages');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`);
-  },
-});
-
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const uploadImage = [
   upload.single('image'),
@@ -34,8 +17,19 @@ export const uploadImage = [
     }
 
     try {
-      const newImageName = req.file.filename;
+      // Prepare the image data for Imgbb
+      const formData = new FormData();
+      formData.append('image', req.file.buffer.toString('base64'));
+      formData.append('key', process.env.IMGBB_API_KEY);
 
+      // Upload the image to Imgbb
+      const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+        headers: formData.getHeaders(),
+      });
+
+      const newImageUrl = response.data.data.url;
+
+      // Update the variation in the database
       const updateQuery = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
       db.query(updateQuery, [name, item, status, variant], (err) => {
         if (err) {
@@ -44,20 +38,22 @@ export const uploadImage = [
         }
       });
 
-      const insertQuery = 'INSERT INTO `images` (`name`, `variation`) VALUES (?, ?)';
-      db.query(insertQuery, [newImageName, variant], (err) => {
+      // Insert the new image record into the database
+      const insertQuery = 'INSERT INTO `images` (`name`, `variation`, `url`) VALUES (?, ?, ?)';
+      db.query(insertQuery, [req.file.originalname, variant, newImageUrl], (err) => {
         if (err) {
           console.error('Database insert error:', err);
           return res.status(500).json({ error: 'Database insert error' });
         }
       });
 
-      const oldImagePath = path.join(__dirname, '../itemImages', oldImageName);
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
+      // Optionally, delete the old image (if required)
+      if (oldImageName) {
+        // Imgbb does not support direct deletion of images through API.
+        // Consider a different approach or omit this step.
       }
 
-      res.status(200).json({ data: 'success', file: req.file });
+      res.status(200).json({ data: 'success', file: { filename: req.file.originalname, url: newImageUrl } });
     } catch (error) {
       console.error('Error handling the file upload:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -77,12 +73,19 @@ export const uploadFirstImage = [
     }
 
     try {
-      const newImageName = req.file.filename;
+      // Prepare the image data for Imgbb
+      const formData = new FormData();
+      formData.append('image', req.file.buffer.toString('base64'));
+      formData.append('key', process.env.IMGBB_API_KEY);
 
-      if (typeof variant === 'undefined') {
-        throw new Error('Variant is required');
-      }
+      // Upload the image to Imgbb
+      const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+        headers: formData.getHeaders(),
+      });
 
+      const newImageUrl = response.data.data.url;
+
+      // Update the variation in the database
       const updateQuery = 'UPDATE `variations` SET `name` = ?, `item` = ?, `status` = ? WHERE `id` = ?';
       db.query(updateQuery, [name, item, status, variant], (err) => {
         if (err) {
@@ -91,15 +94,16 @@ export const uploadFirstImage = [
         }
       });
 
-      const insertQuery = 'INSERT INTO `images` (`name`, `variation`) VALUES (?, ?)';
-      db.query(insertQuery, [newImageName, variant], (err) => {
+      // Insert the new image record into the database
+      const insertQuery = 'INSERT INTO `images` (`name`, `variation`, `url`) VALUES (?, ?, ?)';
+      db.query(insertQuery, [req.file.originalname, variant, newImageUrl], (err) => {
         if (err) {
           console.error('Database insert error:', err);
           return res.status(500).json({ error: 'Database insert error' });
         }
       });
 
-      res.status(200).json({ data: 'success', file: req.file });
+      res.status(200).json({ data: 'success', file: { filename: req.file.originalname, url: newImageUrl } });
     } catch (error) {
       console.error('Error handling the file upload:', error);
       res.status(500).json({ error: 'Internal Server Error' });

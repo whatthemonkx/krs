@@ -79,7 +79,8 @@ export const getSoldOutSizes = (req, res) => {
         i.description AS item_description,
         i.price AS item_price,
         i.itemType AS item_type,
-        p.name AS image
+        p.name AS image_name,
+        p.url AS image
     FROM sizes s
     LEFT JOIN variations v ON s.variation = v.id
     LEFT JOIN items i ON v.item = i.id

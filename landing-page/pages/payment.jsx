@@ -96,7 +96,7 @@ const PaymentPage = () => {
               <div key={item.sizeId} className='cartItem'>
                 <img
                   className='mainpageItemImage'
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].name}`}
+                  src={item.variations.filter(variants => variants.id === parseInt(item.variant))[0].images[0].url}
                   alt=""
                   width={100}
                 />

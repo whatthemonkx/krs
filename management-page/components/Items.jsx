@@ -94,7 +94,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     item.variations[0].images &&
                                     item.variations[0].images[0] &&
                                     item.variations[0].images[0].name
-                                    ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations[0].images[0].name}`
+                                    ? item.variations[0].images[0].url
                                     : 'http://via.placeholder.com/100x100'
                                 }
                                 />
@@ -167,7 +167,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     item.variations[0].images &&
                                     item.variations[0].images[0] &&
                                     item.variations[0].images[0].name
-                                    ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations[0].images[0].name}`
+                                    ? item.variations[0].images[0].url
                                     : 'http://via.placeholder.com/100x100'
                                 }
                                 />
@@ -240,7 +240,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     item.variations[0].images &&
                                     item.variations[0].images[0] &&
                                     item.variations[0].images[0].name
-                                    ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations[0].images[0].name}`
+                                    ? item.variations[0].images[0].url
                                     : 'http://via.placeholder.com/100x100'
                                 }
                                 />
@@ -313,7 +313,7 @@ export default function Items({setPickedItem, setEditing}) {
                                     item.variations[0].images &&
                                     item.variations[0].images[0] &&
                                     item.variations[0].images[0].name
-                                    ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.variations[0].images[0].name}`
+                                    ? item.variations[0].images[0].url
                                     : 'http://via.placeholder.com/100x100'
                                 }
                                 />
