@@ -17,9 +17,6 @@ export default function Products() {
   const [pickedVariant, setPickedVariant] = useState(0);
   const [editing, setEditing] = useState(0);
 
-  console.log(pickedItem)
-  console.log(pickedVariant)
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="sticky z-[1000] top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">

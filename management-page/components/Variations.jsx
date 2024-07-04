@@ -308,7 +308,6 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
                                             className="aspect-square rounded-md object-cover"
                                             height="100"
                                             width="100"
-                                            // src={`${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${item.images[0].name}`}
                                             src={
                                                 item.images &&
                                                 item.images[0] &&

@@ -1,138 +1,83 @@
-import Image from "next/image"
-import Link from "next/link"
-import {
-  ChevronLeft,
-  Home,
-  LineChart,
-  Package,
-  Package2,
-  PanelLeft,
-  PlusCircle,
-  Search,
-  Settings,
-  ShoppingCart,
-  Upload,
-  Trash,
-  X,
-  Save,
-  Pencil,
-} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+import { ChevronLeft, PlusCircle, Upload, Trash, X, Save, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { getItems, editItem, addItem, deleteSize, editSize, addSize } from "../app/api/items";
-import { getCategories, addCategory } from "../app/api/categories";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ToggleGroup } from "@/components/ui/toggle-group"
+import { getItems, deleteSize, editSize, addSize } from "../app/api/items";
 import { useEffect, useState } from "react";
-import { Description } from "@radix-ui/react-dialog"
+import { useDropzone } from 'react-dropzone';
+import { uploadImage, uploadFirstImage, editVariation, addVariation } from '../app/api/upload'; 
 
 export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}) {
     const [variation, setVariation] = useState(null);
-    const [cats, setCats] = useState(null);
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [number, setNumber] = useState(0);
     const [status, setStatus] = useState(""); 
-    const [category, setCategory] = useState(""); 
-    const [newCategory, setNewCategory] = useState(""); 
+    const [file, setFile] = useState(null);
+    const [oldImageName, setOldImageName] = useState('');
     const [editingSize, setEditingSize] = useState(0); 
     const [addingSize, setAddingSize] = useState(0); 
     const [sizeName, setSizeName] = useState("");
     const [sizeQuantity, setSizeQuantity] = useState(0);
+    const [imagePreview, setImagePreview] = useState(''); 
 
     const fetchItems = async () => {
-        const variation = await getItems();
-        setVariation(variation.find(item => item.item_id === pickedItem).variations.find(item => item.id === pickedVariant));
-        // setVariation(variation);
+        const variations = await getItems();
+        const variation = variations.find(item => item.item_id === pickedItem).variations.find(item => item.id === pickedVariant);
+        setVariation(variation);
 
-        // if (pickedItem) {
-        //     setDescription(items.find(item => item.item_id === pickedItem).item_description)
-        //     setName(items.find(item => item.item_id === pickedItem).item_name)
-        //     setNumber(items.find(item => item.item_id === pickedItem).item_price)
-        //     setStatus(items.find(item => item.item_id === pickedItem).item_status)
-        //     setCategory(items.find(item => item.item_id === pickedItem).item_type)
-        // }
+        if (pickedVariant > 0) {
+            setOldImageName(variation.images?.[0]?.name)
+            setStatus(variation.status)
+            setName(variation.name)
+            setFile(variation.images?.[0]?.name)
+        }
     };
-
-    // const fetchCats = async () => {
-    //     const cats = await getCategories();
-    //     setCats(cats);
-    // };
 
     useEffect(() => {
         fetchItems()
-        // fetchCats()
     }, []);
 
-    // function handleAddCategory() {
-    //     if (newCategory.replace(/\s+/g, '') !== "") {
-    //         addCategory(newCategory) 
-    //         fetchCats()
-    //         setNewCategory("")
-    //     }
-    // }
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*',
+        onDrop: (acceptedFiles) => {
+            setFile(acceptedFiles[0]);
+            const previewUrl = URL.createObjectURL(acceptedFiles[0]);
+            setImagePreview(previewUrl);
+        },
+    });
 
-    // function handleEditAddItem() {
-    //     if (pickedItem) {
-    //         editItem(name, description, number, category, status, pickedItem)
-    //         setPickedItem(0);
-    //         setEditing(0);
-    //     } else {
-    //         addItem(name, description, number, category, status)
-    //         setPickedItem(0);
-    //         setEditing(0);
-    //     }
-    // }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (type === "New") {
+            const data = await addVariation(name, pickedItem, status);
+            console.log('Image uploaded successfully addVariation:', data);
+            setPickedVariant(0)
+            return
+        }
+        if (!name || !pickedItem || !status || !pickedVariant) {
+            console.log("oof")
+            return; 
+        } 
+        try {
+            if (typeof(file) === "string" || file === undefined) {
+                const data = await editVariation(name, pickedItem, status, pickedVariant);
+                console.log('Image uploaded successfully editVariation:', data);
+            } else if (oldImageName === undefined) {
+                const data = await uploadFirstImage(file, name, pickedItem, status, pickedVariant);
+                console.log('Image uploaded successfully uploadFirstImage:', data);
+            } else {
+                const data = await uploadImage(file, name, pickedItem, status, oldImageName, pickedVariant);
+                console.log('Image uploaded successfully uploadImage:', data);
+            }
+            setPickedVariant(0)
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    };
 
     async function handleDeleteSize(itemid) {
         await deleteSize(itemid);
@@ -151,9 +96,6 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
         fetchItems();
     }
 
-    // console.log(sizeName)
-    console.log(variation?.images?.[0]?.name)
-
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -171,12 +113,10 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                     <Button variant="outline" size="sm" onClick={() => setPickedVariant(0)}>
                     Cancel
                     </Button>
-                    <Button size="sm" onClick={() => handleEditAddItem()}>Save Variation</Button>
+                    <Button size="sm" onClick={handleSubmit}>Save Variation</Button>
                 </div>
                 </div>
-
                 <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-
                     <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                         <Card x-chunk="dashboard-07-chunk-0">
                         <CardHeader>
@@ -198,7 +138,6 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                             </div>
                         </CardContent>
                         </Card>
-
                         {type === "Old" && <Card x-chunk="dashboard-07-chunk-1">
                         <CardHeader>
                             <CardTitle>Stock</CardTitle>
@@ -252,7 +191,6 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                                         </ToggleGroup>
                                     </TableCell>
                                     </TableRow>}
-
                                     {editingSize !== item.id && <TableRow>
                                     <TableCell className="font-semibold text-center">
                                         {item.id}
@@ -282,11 +220,8 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                             {addingSize === 1 && <Table>
                                 <TableBody>
                                     <TableRow>
-                                    {/* <TableCell className="font-semibold text-center">
-                                        1
-                                    </TableCell> */}
                                     <TableCell className="text-left">
-                                        <Label htmlFor="stock-1" /* className="sr-only" */>
+                                        <Label htmlFor="stock-1">
                                         Size:
                                         </Label>
                                         <Input
@@ -297,7 +232,7 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                                         />
                                     </TableCell>
                                     <TableCell className="text-left">
-                                        <Label htmlFor="price-1" /* className="sr-only" */>
+                                        <Label htmlFor="price-1">
                                         Stock:
                                         </Label>
                                         <Input
@@ -327,7 +262,6 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                         </CardFooter>
                         </Card>}
                     </div>
-
                     <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
                         <Card x-chunk="dashboard-07-chunk-3">
                         <CardHeader>
@@ -351,7 +285,6 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                             </div>
                         </CardContent>
                         </Card>
-
                         {type === "Old" && <Card
                         className="overflow-hidden" x-chunk="dashboard-07-chunk-4"
                         >
@@ -364,22 +297,20 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
                                 alt="Variation image"
                                 className="aspect-square w-full rounded-md object-cover"
                                 height="300"
-                                src={variation?.images?.[0]?.name ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variation?.images?.[0]?.name}` : "http://via.placeholder.com/300x300"}
+                                src={typeof(file) === "object" ? imagePreview : variation?.images?.[0]?.name ? `${process.env.NEXT_PUBLIC_IMAGE_LINK}/itemImages/${variation?.images?.[0]?.name}` : "http://via.placeholder.com/300x300"}
                                 width="300"
                             />
-                            <div className="grid grid-cols-1 gap-2">
-                                <button className="flex h-16 w-full items-center justify-center rounded-md border border-dashed">
+                            {file && typeof(file) === 'object' && <p>Selected file: {file.name}</p>}
+                            <div {...getRootProps()} className="flex h-16 w-full items-center justify-center rounded-md border border-dashed">
+                                <input {...getInputProps()} />
                                 <Upload className="h-4 w-4 text-muted-foreground" />
                                 <span className="sr-only">Upload</span>
-                                </button>
                             </div>
                             </div>
                         </CardContent>
                         </Card>}
                     </div>
-
                 </div>
-
                 <div className="flex items-center justify-center gap-2 md:hidden">
                 <Button variant="outline" size="sm" onClick={() => setPickedVariant(0)}>
                     Cancel
