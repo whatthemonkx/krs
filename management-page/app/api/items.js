@@ -94,3 +94,29 @@ export const deleteSize = async (id) => {
         console.error('Error fetching users:', error);
     }
 };
+
+export const editSize = async (id, name, quantity) => {
+    try {
+        const response = await axios.post(`${API_URL}/items/editSize`, {
+            id: id,
+            name: name,
+            quantity: quantity,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
+
+export const addSize = async (id, name, quantity) => {
+    try {
+        const response = await axios.post(`${API_URL}/items/addSize`, {
+            id: id,
+            name: name,
+            quantity: quantity,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};

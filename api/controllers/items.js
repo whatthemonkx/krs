@@ -152,3 +152,21 @@ export const deleteSize = (req, res) => {
         return res.status(200).json(data);
     });
 };
+
+export const editSize = (req, res) => {
+    const q = "UPDATE `store`.`sizes` SET `name` = ?, `quantity` = ? WHERE (`id` = ?);";
+
+    db.query(q, [req.body.name, req.body.quantity, req.body.id], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};
+
+export const addSize = (req, res) => {
+    const q = "INSERT INTO `store`.`sizes` (`name`, `variation`, `quantity`) VALUES (?, ?, ?);";
+
+    db.query(q, [req.body.name, req.body.id, req.body.quantity], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+};

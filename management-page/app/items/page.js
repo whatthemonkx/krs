@@ -111,7 +111,7 @@ export default function Products() {
       {editing === 1 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"New"}/>}
       {editing === 2 && <AddItem setPickedItem={setPickedItem} setEditing={setEditing} type={"Old"} pickedItem={pickedItem}/>}
       {pickedVariant === -1 && <AddVariation type={"New"} pickedItem={pickedItem} setPickedVariant={setPickedVariant}/>}
-      {pickedVariant > 0 && <AddVariation type={"Old"} pickedItem={pickedItem} setPickedVariant={setPickedVariant}/>}
+      {pickedVariant > 0 && <AddVariation type={"Old"} pickedItem={pickedItem} pickedVariant={pickedVariant} setPickedVariant={setPickedVariant}/>}
     </div>
   )
 }

@@ -71,12 +71,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { getItems, editItem, addItem, deleteSize } from "../app/api/items";
+import { getItems, editItem, addItem, deleteSize, editSize, addSize } from "../app/api/items";
 import { getCategories, addCategory } from "../app/api/categories";
 import { useEffect, useState } from "react";
 import { Description } from "@radix-ui/react-dialog"
 
-export function AddVariation({type, pickedItem, setPickedVariant}) {
+export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}) {
     const [variation, setVariation] = useState(null);
     const [cats, setCats] = useState(null);
     const [name, setName] = useState("");
@@ -86,12 +86,13 @@ export function AddVariation({type, pickedItem, setPickedVariant}) {
     const [category, setCategory] = useState(""); 
     const [newCategory, setNewCategory] = useState(""); 
     const [editingSize, setEditingSize] = useState(0); 
+    const [addingSize, setAddingSize] = useState(0); 
     const [sizeName, setSizeName] = useState("");
     const [sizeQuantity, setSizeQuantity] = useState(0);
 
     const fetchItems = async () => {
         const variation = await getItems();
-        setVariation(variation.find(item => item.item_id === pickedItem).variations.find(item => item.id === pickedItem));
+        setVariation(variation.find(item => item.item_id === pickedItem).variations.find(item => item.id === pickedVariant));
         // setVariation(variation);
 
         // if (pickedItem) {
@@ -135,6 +136,18 @@ export function AddVariation({type, pickedItem, setPickedVariant}) {
 
     async function handleDeleteSize(itemid) {
         await deleteSize(itemid);
+        fetchItems();
+    }
+
+    async function handleEditSize(itemid) {
+        await editSize(itemid, sizeName, sizeQuantity);
+        setEditingSize(0)
+        fetchItems();
+    }
+
+    async function handleAddSize() {
+        await addSize(pickedVariant, sizeName, sizeQuantity);
+        setAddingSize(0)
         fetchItems();
     }
 
@@ -200,7 +213,7 @@ export function AddVariation({type, pickedItem, setPickedVariant}) {
                                 <TableHead className="w-[100px] text-center">Size</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            {variation?.sizes.map((item) => (
+                            {variation?.sizes?.map((item) => (
                                 <TableBody key={item.id}>
                                     {editingSize === item.id && <TableRow>
                                     <TableCell className="font-semibold text-center">
@@ -234,11 +247,12 @@ export function AddVariation({type, pickedItem, setPickedVariant}) {
                                         defaultValue="s"
                                         variant="outline"
                                         >
-                                            <Button size="sm" className="p-[5px] h-fit"><Save  height={20} width={20}/></Button>
+                                            <Button size="sm" className="p-[5px] h-fit" onClick={() => handleEditSize(item.id)}><Save  height={20} width={20}/></Button>
                                             <Button size="sm" className="p-[5px] h-fit" onClick={() => setEditingSize(0)}><X  height={20} width={20}/></Button>
                                         </ToggleGroup>
                                     </TableCell>
                                     </TableRow>}
+
                                     {editingSize !== item.id && <TableRow>
                                     <TableCell className="font-semibold text-center">
                                         {item.id}
@@ -265,10 +279,51 @@ export function AddVariation({type, pickedItem, setPickedVariant}) {
                             </Table>
                         </CardContent>
                         <CardFooter className="justify-center border-t p-4">
-                            <Button size="sm" variant="ghost" className="gap-1">
-                            <PlusCircle className="h-3.5 w-3.5" />
-                            Add Variant
-                            </Button>
+                            {addingSize === 1 && <Table>
+                                <TableBody>
+                                    <TableRow>
+                                    {/* <TableCell className="font-semibold text-center">
+                                        1
+                                    </TableCell> */}
+                                    <TableCell className="text-left">
+                                        <Label htmlFor="stock-1" /* className="sr-only" */>
+                                        Size:
+                                        </Label>
+                                        <Input
+                                        id="stock-1"
+                                        type="text"
+                                        placeholder="Enter name"
+                                        onChange={(e) => setSizeName(e.target.value)}
+                                        />
+                                    </TableCell>
+                                    <TableCell className="text-left">
+                                        <Label htmlFor="price-1" /* className="sr-only" */>
+                                        Stock:
+                                        </Label>
+                                        <Input
+                                        id="price-1"
+                                        type="number"
+                                        placeholder="Enter stock"
+                                        onChange={(e) => setSizeQuantity(e.target.value)}
+                                        />
+                                    </TableCell>
+                                    <TableCell className="text-left">
+                                        <ToggleGroup
+                                        type="single"
+                                        defaultValue="s"
+                                        variant="outline"
+                                        >
+                                            <Button size="sm" className="p-[5px] h-fit" onClick={() => handleAddSize()}><Save  height={20} width={20}/></Button>
+                                            <Button size="sm" className="p-[5px] h-fit" onClick={() => setAddingSize(0)}><X  height={20} width={20}/></Button>
+                                        </ToggleGroup>
+                                    </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>}
+                            {addingSize === 0 && <Button size="sm" variant="ghost" className="gap-1" onClick={() => {setAddingSize(1);setSizeName('');setSizeQuantity('')}}>
+                                <PlusCircle className="h-3.5 w-3.5" />
+                                Add Variant
+                            </Button>}
                         </CardFooter>
                         </Card>}
                     </div>
