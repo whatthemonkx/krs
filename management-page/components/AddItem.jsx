@@ -19,8 +19,10 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
     const [newCategory, setNewCategory] = useState(""); 
 
     const fetchItems = async () => {
-        const items = await getItems();
+        const cats = await getCategories();
+        setCats(cats);
 
+        const items = await getItems();
         if (pickedItem) {
             setDescription(items.find(item => item.item_id === pickedItem).item_description)
             setName(items.find(item => item.item_id === pickedItem).item_name)
@@ -30,14 +32,8 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
         }
     };
 
-    const fetchCats = async () => {
-        const cats = await getCategories();
-        setCats(cats);
-    };
-
     useEffect(() => {
         fetchItems()
-        fetchCats()
     }, []);
 
     async function handleAddCategory() {
@@ -49,15 +45,21 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
     }
 
     async function handleEditAddItem() {
-        if (pickedItem) {
-            await editItem(name, description, number, category, status, pickedItem)
-            setPickedItem(0);
-            setEditing(0);
-        } else {
-            await addItem(name, description, number, category, status)
-            setPickedItem(0);
-            setEditing(0);
+        if (name.replace(/\s+/g, '') !== "" && description.replace(/\s+/g, '') !== "" && number > 0 && status.replace(/\s+/g, '') !== "" && category.replace(/\s+/g, '') !== "") {
+            if (pickedItem) {
+                await editItem(name, description, number, category, status, pickedItem)
+                setPickedItem(0);
+                setEditing(0);
+            } else {
+                await addItem(name, description, number, category, status)
+                setPickedItem(0);
+                setEditing(0);
+            }            
         }
+    }
+
+    if (!cats) {
+        return <div></div>; 
     }
 
     return (
@@ -152,7 +154,7 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6 grid-cols-1">
-                        {cats && <div className="grid gap-3">
+                        <div className="grid gap-3">
                             <Label htmlFor="category">Category</Label>
                             <Select value={category} onValueChange={(newValue) => setCategory(newValue)} aria-label="Select category">
                                 <SelectTrigger
@@ -167,7 +169,7 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
                                     ))}
                                 </SelectContent>
                             </Select>
-                        </div>}
+                        </div>
                         <div className="grid gap-3">
                             <Label htmlFor="name">New Category</Label>
                             <Input

@@ -52,14 +52,16 @@ export function AddVariation({type, pickedItem, setPickedVariant, pickedVariant}
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (name.replace(/\s+/g, '') === "" || status.replace(/\s+/g, '') === "") {
+            return; 
+        } 
+
         if (type === "New") {
             await addVariation(name, pickedItem, status);
             setPickedVariant(0)
             return
         }
-        if (!name || !pickedItem || !status || !pickedVariant) {
-            return; 
-        } 
+
         try {
             if (typeof(file) === "string" || file === undefined) {
                 await editVariation(name, pickedItem, status, pickedVariant);
