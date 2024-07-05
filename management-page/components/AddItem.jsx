@@ -40,21 +40,21 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
         fetchCats()
     }, []);
 
-    function handleAddCategory() {
+    async function handleAddCategory() {
         if (newCategory.replace(/\s+/g, '') !== "") {
-            addCategory(newCategory) 
+            await addCategory(newCategory) 
             fetchCats()
             setNewCategory("")
         }
     }
 
-    function handleEditAddItem() {
+    async function handleEditAddItem() {
         if (pickedItem) {
-            editItem(name, description, number, category, status, pickedItem)
+            await editItem(name, description, number, category, status, pickedItem)
             setPickedItem(0);
             setEditing(0);
         } else {
-            addItem(name, description, number, category, status)
+            await addItem(name, description, number, category, status)
             setPickedItem(0);
             setEditing(0);
         }

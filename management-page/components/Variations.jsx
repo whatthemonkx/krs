@@ -27,8 +27,8 @@ export default function Variations({pickedItem, setPickedItem, setPickedVariant}
         fetchItems()
     }, []);
 
-    function handleDeleteVariation(itemId) {
-        deleteVariation(itemId)
+    async function handleDeleteVariation(itemId) {
+        await deleteVariation(itemId)
         fetchItems()
     } 
 

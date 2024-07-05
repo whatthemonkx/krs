@@ -33,8 +33,8 @@ export default function Items({setPickedItem, setEditing}) {
         }).format(amount);
     }
 
-    function handleDeleteItem(itemId) {
-        deleteItem(itemId)
+    async function handleDeleteItem(itemId) {
+        await deleteItem(itemId)
         fetchItems()
     } 
 
