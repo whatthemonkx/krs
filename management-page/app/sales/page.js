@@ -75,8 +75,8 @@ export default function Sales() {
     return `${month}/${day}/${year}`;
   }
 
-  function handleFulfillOrder(orderId) {
-    fulfillOrder(orderId)
+  async function handleFulfillOrder(orderId) {
+    await fulfillOrder(orderId)
     fetchItems()
   } 
 

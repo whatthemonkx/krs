@@ -152,7 +152,7 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6 grid-cols-1">
-                        <div className="grid gap-3">
+                        {cats && <div className="grid gap-3">
                             <Label htmlFor="category">Category</Label>
                             <Select value={category} onValueChange={(newValue) => setCategory(newValue)} aria-label="Select category">
                                 <SelectTrigger
@@ -162,12 +162,12 @@ export function AddItem({type, pickedItem, setPickedItem, setEditing}) {
                                     <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {cats?.map((cat) => (
+                                    {cats.map((cat) => (
                                         <SelectItem key={cat.id} value={cat.name}>{cat.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
-                        </div>
+                        </div>}
                         <div className="grid gap-3">
                             <Label htmlFor="name">New Category</Label>
                             <Input
